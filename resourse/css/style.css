@@ -1,0 +1,32 @@
+/*css index.php*/
+.formLogin{
+    margin-top: 30px;
+}
+
+/*css home.php*/
+.esconde{
+    display: none;
+}
+
+#dropCadastro{
+    position: absolute;
+    background-color: #4582ec;
+    color: RGBA(255, 255, 255, 0.6);
+    text-align: left;
+    padding: 0px;
+}
+.itemDrop{
+    list-style: none;
+    padding: 5px 15px 5px 10px;
+}
+.itemDrop:hover{
+    color: #fff;
+    cursor: pointer;
+}
+#dropGestaoProduto{
+    position: absolute;
+    background-color: #4582ec;
+    color: RGBA(255, 255, 255, 0.6);
+    text-align: left;
+    padding: 0px;
+}
