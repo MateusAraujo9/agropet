@@ -2,3 +2,8 @@ body{
     display: flex;
     justify-content: center;
 }
+#desabilitar{
+    visibility: hidden;
+    height: 1px;
+    font-size: 1px;
+}

@@ -1,3 +1,31 @@
+<?php
+require "DAO/conection.php";
+$enviou = isset($_POST['enviou'])?$_POST['enviou']:"";
+$login = isset($_POST['login'])?$_POST['login']:"erro1";
+$senha = md5(isset($_POST['password'])?$_POST['password']:"erro2");
+
+if (!empty($enviou) && $enviou == "true"){
+    $sql = "SELECT * FROM usuario WHERE login = '".$login."' AND senha = '".$senha."'";
+
+    try{
+        $sql = $pdo->query($sql);
+
+        if ($sql->rowCount() > 0){
+            $usuario = $sql->fetch();
+            echo "<script>alert('Login correto: ".$usuario['nome']."')</script>";
+        }else{
+            echo "<script>alert('Login incorreto.')</script>";
+        }
+    }catch (PDOException $e){
+        echo "Erro de conexão: ".$e->getMessage();
+    }
+
+    //header("Location: /home.php");
+}else{
+    echo "<script>alert('Login incorreto $enviou')</script>";
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,11 +50,12 @@
     <div class="card border-primary mb-3" style="max-width: 20rem;">
         <div class="card-header">Acessar</div>
         <div class="card-body">
+            <input type="text" id="desabilitar" value="true" name="enviou">
             <div class="form-group">
-                <input type="text" class="form-control" placeholder="Login" id="login">
+                <input type="text" class="form-control" placeholder="Login" id="login" name="login">
             </div>
             <div class="form-group">
-                <input type="password" class="form-control" id="password" placeholder="Password">
+                <input type="password" class="form-control" id="password" placeholder="Password" name="password">
             </div>
             <div class="form-group">
                 <input type="submit" class="btn btn-primary btn-lg btn-block" value="Entrar">
