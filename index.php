@@ -16,6 +16,8 @@ if ($logado == 'false' || empty($logado)){
 
     <!--Bootstrap-->
     <link rel="stylesheet" href="resourse/css/bootstrap.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 
     <!--React-->
     <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>

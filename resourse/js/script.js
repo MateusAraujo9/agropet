@@ -17,7 +17,8 @@ app.config(function ($routeProvider) {
 });
 
 function trocaSenha(id) {
-    console.log(id);
+    var elemento = document.getElementById("idUsuario");
+    elemento.setAttribute("value", id);
 }
 
 function ativaTable(elemento) {
