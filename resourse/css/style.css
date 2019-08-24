@@ -30,3 +30,23 @@
     text-align: left;
     padding: 0px;
 }
+.userLogado{
+    color: #fff;
+    line-height: 41px;
+    margin-bottom: 0px;
+    margin-right: 10px;
+    font-family: Arial, SansSerif;
+}
+.btnSair{
+    color: #fff;
+    border: 1px solid #fff;
+    padding: 2px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+.btnSair:hover{
+    text-decoration: none;
+    color: #000;
+    border: 1px solid #000;
+    font-family: Arial, SansSerif;
+}

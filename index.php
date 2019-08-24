@@ -1,10 +1,14 @@
 <?php
 require "DAO/conection.php";
-$enviou = isset($_POST['enviou'])?$_POST['enviou']:"";
-$login = isset($_POST['login'])?$_POST['login']:"erro1";
-$senha = md5(isset($_POST['password'])?$_POST['password']:"erro2");
+$login = isset($_POST['login'])?$_POST['login']:"";
+$senha = md5(isset($_POST['password'])?$_POST['password']:"");
+$logado = isset($_COOKIE['logado'])?$_COOKIE['logado']:"";
 
-if (!empty($enviou) && $enviou == "true"){
+if ($logado == 'true'){
+    header("Location: /home.php");
+}
+
+if (!empty($login)){
     $sql = "SELECT * FROM usuario WHERE login = '".$login."' AND senha = '".$senha."'";
 
     try{
@@ -12,17 +16,19 @@ if (!empty($enviou) && $enviou == "true"){
 
         if ($sql->rowCount() > 0){
             $usuario = $sql->fetch();
-            echo "<script>alert('Login correto: ".$usuario['nome']."')</script>";
+
+            setcookie("tkuser", $usuario['token'], time()+18000);
+            setcookie("logado", "true", time()+18000);
+            //echo "<script>alert('Login correto: ".$usuario['token']."')</script>";
+
+            header("Location: /home.php");
         }else{
-            echo "<script>alert('Login incorreto.')</script>";
+            echo "<script>alert('Usuário ou Senha incorreto.')</script>";
         }
     }catch (PDOException $e){
         echo "Erro de conexão: ".$e->getMessage();
     }
 
-    //header("Location: /home.php");
-}else{
-    echo "<script>alert('Login incorreto $enviou')</script>";
 }
 ?>
 
@@ -50,7 +56,6 @@ if (!empty($enviou) && $enviou == "true"){
     <div class="card border-primary mb-3" style="max-width: 20rem;">
         <div class="card-header">Acessar</div>
         <div class="card-body">
-            <input type="text" id="desabilitar" value="true" name="enviou">
             <div class="form-group">
                 <input type="text" class="form-control" placeholder="Login" id="login" name="login">
             </div>

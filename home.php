@@ -1,3 +1,14 @@
+<?php
+require "DAO/conection.php";
+$logado = isset($_COOKIE['logado'])?$_COOKIE['logado']:"";
+$tkuser = isset($_COOKIE['tkuser'])?$_COOKIE['tkuser']:"";
+
+if ($logado == 'false' || empty($logado)){
+    header("Location: /");
+}
+
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,6 +17,11 @@
     <!--Bootstrap-->
     <link rel="stylesheet" href="resourse/css/bootstrap.css">
 
+    <!--React-->
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+    <!--Meus links-->
     <link rel="stylesheet" href="resourse/css/style.css">
     <script src="resourse/js/script.js"></script>
     <meta charset="utf-8">
@@ -46,8 +62,21 @@
                 <a class="nav-link" href="#">Relatórios</a>
             </li>
         </ul>
+        <?php
+        if (!empty($tkuser)){
+            $sql = "SELECT * FROM usuario WHERE token = '".$tkuser."'";
+            $sql = $pdo->query($sql);
+
+            $usuario = $sql->fetch();
+
+            echo "<p class='userLogado'>Bem vindo, ".$usuario['nome']."</p><a class='btnSair' href='logout.php'>sair</a>";
+        }
+
+
+        ?>
     </div>
 </nav>
+<div ng-view></div>
 </body>
 </html>
   
