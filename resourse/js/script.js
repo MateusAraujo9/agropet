@@ -7,3 +7,10 @@ function subMenu(sub) {
         subMenu.setAttribute("class", "esconde");
     }
 }
+
+var app = angular.module("meuApp", ["ngRoute"]);
+app.config(function ($routeProvider) {
+    $routeProvider
+        .when("/index.php/", {templateUrl:""})
+        .when("/index.php/cadUsuario", {templateUrl: "cadUsuario.php"})
+})
