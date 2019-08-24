@@ -4,7 +4,7 @@ $logado = isset($_COOKIE['logado'])?$_COOKIE['logado']:"";
 $tkuser = isset($_COOKIE['tkuser'])?$_COOKIE['tkuser']:"";
 
 if ($logado == 'false' || empty($logado)){
-    header("Location: /");
+    header("Location: /login.php");
 }
 
 ?>
@@ -30,9 +30,9 @@ if ($logado == 'false' || empty($logado)){
     <script src="resourse/js/script.js"></script>
     <meta charset="utf-8">
 </head>
-<body>
+<body ng-app="meuApp">
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a class="navbar-brand" href="#">Agropet</a>
+    <a class="navbar-brand" href="#/!">Agropet</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -43,12 +43,12 @@ if ($logado == 'false' || empty($logado)){
                 <a class="nav-link" href="#">Cadastro <span class="sr-only">(current)</span></a>
                 <ul id="dropCadastro" class="esconde">
                     <li class="itemDrop">Produto</li>
-                    <li class="itemDrop">Cliente</li>
-                    <li class="itemDrop">Fornecedor</li>
-                    <li class="itemDrop">Usuário</li>
                     <li class="itemDrop">Grupo</li>
                     <li class="itemDrop">Classe</li>
                     <li class="itemDrop">Subclasse</li>
+                    <li class="itemDrop">Cliente</li>
+                    <li class="itemDrop">Fornecedor</li>
+                    <a href="#!listUsuario" class="linkMenu"><li class="itemDrop">Usuário</li></a>
                 </ul>
             </li>
             <li class="nav-item" onmouseenter="subMenu('dropGestaoProduto')" onmouseleave="subMenu('dropGestaoProduto')">

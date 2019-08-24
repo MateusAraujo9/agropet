@@ -50,3 +50,24 @@
     border: 1px solid #000;
     font-family: Arial, SansSerif;
 }
+.linkMenu{
+    color: RGBA(255, 255, 255, 0.6);
+}
+.linkMenu:hover{
+    text-decoration: none;
+}
+.titulo{
+    text-align: center;
+    margin: 10px 0px 15px 0px;
+}
+.btnListUser{
+    height: 20px;
+    cursor: pointer;
+}
+#btnCadastrar{
+    float: right;
+}
+.containerCenter{
+    max-width: 600px;
+    margin: auto;
+}

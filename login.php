@@ -5,7 +5,7 @@ $senha = md5(isset($_POST['password'])?$_POST['password']:"");
 $logado = isset($_COOKIE['logado'])?$_COOKIE['logado']:"";
 
 if ($logado == 'true'){
-    header("Location: /index.php");
+    header("Location: /");
 }
 
 if (!empty($login)){
@@ -21,7 +21,7 @@ if (!empty($login)){
             setcookie("logado", "true", time()+18000);
             //echo "<script>alert('Login correto: ".$usuario['token']."')</script>";
 
-            header("Location: /index.php");
+            header("Location: /");
         }else{
             echo "<script>alert('Usuário ou Senha incorreto.')</script>";
         }
@@ -51,7 +51,7 @@ if (!empty($login)){
     <meta charset="utf-8">
 </head>
 <body>
-<img src="resourse/imagens/Sua-Logo-768x576.jpg" alt="pet">
+<img src="resourse/imagens/agropet.jpeg" alt="pet">
 <form class="formLogin" method="post">
     <div class="card border-primary mb-3" style="max-width: 20rem;">
         <div class="card-header">Acessar</div>
