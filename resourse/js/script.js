@@ -14,6 +14,14 @@ app.config(function ($routeProvider) {
         .when("/", {templateUrl:"home.php"})
         .when("/listUsuario", {templateUrl: "listUsuario.php"})
         .when("/cadUsuario", {templateUrl: "cadUsuario.html"})
+        .when("/listGrupo", {templateUrl: "listGrupo.php"})
+        .when("/cadGrupo", {templateUrl: "cadGrupo.html"})
+        .when("/listClasse", {templateUrl: "listClasse.php"})
+        .when("/cadClasse", {templateUrl: "cadClasse.html"})
+        .when("/listSubclasse", {templateUrl: "listSubclasse.php"})
+        .when("/cadSubclasse", {templateUrl: "cadSubclasse.html"})
+        .when("/listFornecedor", {templateUrl: "listFornecedor.php"})
+        .when("/cadFornecedor", {templateUrl: "cadFornecedor.html"})
 });
 
 function trocaSenha(id) {

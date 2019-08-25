@@ -45,11 +45,11 @@ if ($logado == 'false' || empty($logado)){
                 <a class="nav-link" href="#">Cadastro <span class="sr-only">(current)</span></a>
                 <ul id="dropCadastro" class="esconde">
                     <li class="itemDrop">Produto</li>
-                    <li class="itemDrop">Grupo</li>
-                    <li class="itemDrop">Classe</li>
-                    <li class="itemDrop">Subclasse</li>
+                    <a href="#!listGrupo" class="linkMenu"><li class="itemDrop">Grupo</li></a>
+                    <a href="#!listClasse" class="linkMenu"><li class="itemDrop">Classe</li></a>
+                    <a href="#!listSubclasse" class="linkMenu"><li class="itemDrop">Subclasse</li></a>
                     <li class="itemDrop">Cliente</li>
-                    <li class="itemDrop">Fornecedor</li>
+                    <a href="#!listFornecedor" class="linkMenu"><li class="itemDrop">Fornecedor</li></a>
                     <a href="#!listUsuario" class="linkMenu"><li class="itemDrop">Usuário</li></a>
                 </ul>
             </li>
