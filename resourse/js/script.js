@@ -22,6 +22,8 @@ app.config(function ($routeProvider) {
         .when("/cadSubclasse", {templateUrl: "cadSubclasse.html"})
         .when("/listFornecedor", {templateUrl: "listFornecedor.php"})
         .when("/cadFornecedor", {templateUrl: "cadFornecedor.html"})
+        .when("/listCliente", {templateUrl: "listCliente.php?teste=557"})
+        .when("/cadCliente", {templateUrl: "cadCliente.html"})
 });
 
 function trocaSenha(id) {

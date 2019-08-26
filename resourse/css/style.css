@@ -71,3 +71,10 @@
     max-width: 600px;
     margin: auto;
 }
+.containerCenter2{
+    max-width: 900px;
+    margin: auto;
+}
+.btnCadastro{
+    margin-bottom: 20px;
+}
