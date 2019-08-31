@@ -1,3 +1,5 @@
+var pagina;
+
 function subMenu(sub) {
     var subMenu = document.getElementById(sub);
 
@@ -22,9 +24,40 @@ app.config(function ($routeProvider) {
         .when("/cadSubclasse", {templateUrl: "cadSubclasse.html"})
         .when("/listFornecedor", {templateUrl: "listFornecedor.php"})
         .when("/cadFornecedor", {templateUrl: "cadFornecedor.html"})
-        .when("/listCliente", {templateUrl: "listCliente.php?teste=557"})
+        .when("/setPaginaCliente/", {templateUrl: "setPaginaCliente.php"})
+        .when("/listCliente/", {templateUrl: "listCliente.php"})
         .when("/cadCliente", {templateUrl: "cadCliente.html"})
 });
+
+app.controller("meuAppCtrl", function ($scope, $http) {
+    $scope.trocaPaginaCliente = function (pg) {
+        $http.get('http://agropet.pc/setPaginaCliente.php?pagina='+pg);
+        reload();
+    }
+})
+
+function reload() {
+    window.location.reload();
+}
+
+function trocaPagina(elemento) {
+    pagina = elemento.getAttribute("name");
+    console.log(pagina);
+}
+
+function getPagina() {
+    return pagina;
+}
+function setPagina(numero) {
+    pagina = numero;
+}
+function definirPagina() {
+    var input = document.getElementById(pagina);
+    input.setAttribute("value", getPagina());
+
+    document.getElementById("auto_enviar").submit();
+
+}
 
 function trocaSenha(id) {
     var elemento = document.getElementById("idUsuario");
@@ -39,3 +72,4 @@ function ativaTable(elemento) {
     }
 
 }
+

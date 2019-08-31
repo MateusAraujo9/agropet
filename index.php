@@ -32,7 +32,7 @@ if ($logado == 'false' || empty($logado)){
     <script src="resourse/js/script.js"></script>
     <meta charset="utf-8">
 </head>
-<body ng-app="meuApp">
+<body ng-app="meuApp" onload="setPagina(2)">
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <a class="navbar-brand" href="#/!">Agropet</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,7 +48,7 @@ if ($logado == 'false' || empty($logado)){
                     <a href="#!listGrupo" class="linkMenu"><li class="itemDrop">Grupo</li></a>
                     <a href="#!listClasse" class="linkMenu"><li class="itemDrop">Classe</li></a>
                     <a href="#!listSubclasse" class="linkMenu"><li class="itemDrop">Subclasse</li></a>
-                    <a href="#!listCliente" class="linkMenu"><li class="itemDrop">Cliente</li></a>
+                    <a href="/#!/listCliente" class="linkMenu"><li class="itemDrop">Cliente</li></a>
                     <a href="#!listFornecedor" class="linkMenu"><li class="itemDrop">Fornecedor</li></a>
                     <a href="#!listUsuario" class="linkMenu"><li class="itemDrop">Usuário</li></a>
                 </ul>
@@ -82,7 +82,9 @@ if ($logado == 'false' || empty($logado)){
         ?>
     </div>
 </nav>
-<div ng-view></div>
+<div ng-view ng-controller="meuAppCtrl">
+
+</div>
 </body>
 </html>
   
