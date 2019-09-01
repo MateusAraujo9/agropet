@@ -27,10 +27,10 @@ $pag = $result['valor'];
 
 
 
-$primeiroItem = ($pag-1)*5;
+$primeiroItem = ($pag-1)*10;
 $teste = 0;
 
-$sql = "SELECT * FROM cliente LIMIT ".$primeiroItem. ", 5";
+$sql = "SELECT * FROM cliente ORDER BY nome LIMIT ".$primeiroItem. ", 10";
 
 //Try para pegar clientes da página
 try{
@@ -52,21 +52,21 @@ try{
 
 $vlDividido = (int)$sql2->fetch()['C'];
 
-$vlDividido = $vlDividido/5;
+$vlDividido = $vlDividido/10;
 $numPaginas = intval($vlDividido);
 if ($numPaginas < ($vlDividido)){
     $numPaginas++;
 }
-
 ?>
     <head>
         <!--Bootstrap-->
-        <link rel="stylesheet" href="../resourse/css/bootstrap.css">
+        <link rel="stylesheet" href="/resourse/css/bootstrap.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-        <link rel="stylesheet" href="../resourse/css/style.css">
+        <link rel="stylesheet" href="/resourse/css/style.css">
     </head>
     <h3 class="titulo">Cadastro de Clientes</h3>
+    <a href="#!cadCliente" type="button" class="btn btn-outline-primary">Cadastrar</a>
     <table class="table table-hover">
     <thead>
     <tr>
@@ -75,6 +75,7 @@ if ($numPaginas < ($vlDividido)){
         <th scope="col">CPF</th>
         <th scope="col">Telefone</th>
         <th scope="col">Email</th>
+        <th scope="col">Opções</th>
     </tr>
     </thead>
     <tbody>
@@ -86,6 +87,7 @@ foreach ($clientes as $cl){
     echo "    <td>".$cl['cpf']."</td>";
     echo "    <td>".$cl['telefone']."</td>";
     echo "    <td>".$cl['email']."</td>";
+    echo "    <td><img src=\"resourse/imagens/editar.png\" alt=\"editarUsuario\" title=\"Editar\" class=\"btnListUser\" onclick=\"window.location='editarCliente.php?cliente=".$cl['id']."'\"></td>";
     echo "</tr>";
 }
 echo "</tbody>";

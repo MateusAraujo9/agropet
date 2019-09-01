@@ -1,3 +1,4 @@
+.gitignore
 DAO/conection.php
 resourse/css/bootstrap.css
 resourse/js/angular.js
