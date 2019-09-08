@@ -129,7 +129,7 @@ if (!empty($idClientePost)){
                     <input type="text" class="form-control" id="emailCliente" name="emailCliente" value="<?php echo $cliente['email']?>">
                 </fieldset>
                 <fieldset class="col-md-5">
-                    <label class="col-form-label" for="cepCliente">Bairro</label>
+                    <label class="col-form-label" for="cepCliente">CEP</label>
                     <input type="text" class="form-control" id="cepCliente" name="cepCliente" value="<?php echo $cliente['cep']?>">
                 </fieldset>
             </div>

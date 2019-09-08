@@ -136,3 +136,134 @@ function setFornecedor(nome) {
 
     fecharAlerta();
 }
+
+//Pagina de Produtos
+
+class LinhaProduto extends React.Component{
+    render(){
+        return(
+          <tr>
+              <td>{this.props.id}</td>
+              <td>{this.props.nomeP}</td>
+              <td>{this.props.barra}</td>
+              <td>{this.props.nomeF}</td>
+              <td>{this.props.vlComp}</td>
+              <td>{this.props.vlVend}</td>
+          </tr>
+        );
+    }
+}
+
+class TabelaBody extends React.Component{
+    render(){
+        let lista = this.props.lista.map((item)=>{
+            return(
+              <LinhaProduto
+                  key={item.id_produto}
+                  id={item.id_produto}
+                  nomeP={item.nome_produto}
+                  barra={item.barra}
+                  nomeF={item.nome_fornecedor}
+                  vlComp={item.vlCompra}
+                  vlVend={item.vlVenda}
+              />
+            );
+        });
+
+        return(
+          <tbody>
+          {lista}
+          </tbody>
+        );
+    }
+}
+
+class Paginacao extends React.Component{
+    render(){
+        let pagAnterior = this.props.pagina-1;
+        let pagina = this.props.pagina;
+        let pagSeguinte = this.props.pagina+1;
+        let ultPagina = this.props.ultimaPagina;
+
+        let proxP = "";
+        if (this.props.ultimaPagina > 1 && this.props.pagina < this.props.ultimaPagina){
+            proxP = (
+                <li>
+                    <a className="page-link" href="javascript:;" onClick={()=>{paginaProduto(pagSeguinte, ultPagina, 1)}}>{pagSeguinte}</a>
+                </li>
+            );
+        }
+        return(
+          <ul className={"pagination"}>
+              <li className="page-item">
+                  <a className="page-link" href="javascript:;" onClick={()=>{paginaProduto(1, ultPagina.valueOf(), 1)}}>&laquo;</a>
+              </li>
+              {this.props.pagina>1?
+                  <li className="page-item">
+                      <a className="page-link" href="javascript:;" onClick={()=>{paginaProduto(pagAnterior, ultPagina, 1)}}>{pagAnterior}</a>
+                  </li>:""
+              }
+              <li className="page-item active">
+                  <a className="page-link" href="javascript:;" onClick={()=>{paginaProduto(pagina, pagina, 1)}}>{pagina}</a>
+              </li>
+              {proxP}
+              <li className="page-item">
+                  <a className="page-link" href="javascript:;"  onClick={()=>{paginaProduto(ultPagina, ultPagina, 1)}}>&raquo;</a>
+              </li>
+          </ul>
+        );
+    }
+}
+
+class TabelaHead extends React.Component{
+    render(){
+        return(
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Cod Barra</th>
+                    <th scope="col">Fornecedor</th>
+                    <th scope="col">Vl Compra</th>
+                    <th scope="col">Vl Venda</th>
+                </tr>
+            </thead>
+        );
+    }
+}
+
+class TabelaProduto extends  React.Component{
+    render(){
+        return(
+          <table className="table table-hover" id="tabela">
+              <TabelaHead/>
+              <TabelaBody lista={this.props.lista}/>
+          </table>
+        );
+    }
+}
+
+function mudarPaginaProduto(lista, pagina, ultimaPagina) {
+    let elementoProdutos = (
+        <TabelaProduto lista={lista}/>
+    );
+
+    ReactDOM.render(
+      elementoProdutos,
+      document.getElementById("proximaTable")
+    );
+
+    let elementoPagi = (
+        <Paginacao pagina={pagina} ultimaPagina={ultimaPagina}/>
+    );
+
+    ReactDOM.render(
+      elementoPagi,
+      document.getElementById("pagi2")
+    );
+}
+
+function removerComponentesPagination() {
+    ReactDOM.unmountComponentAtNode(document.getElementById("tabela"));
+    ReactDOM.unmountComponentAtNode(document.getElementById("pagi2"));
+}

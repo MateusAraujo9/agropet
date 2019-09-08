@@ -59,7 +59,7 @@
             <div class="form-group row">
                 <div class="col-md-3">
                     <label class="col-form-label" for="barra">Cod Barra</label>
-                    <input type="text" class="form-control" id="barra" name="barra">
+                    <input type="text" class="form-control" id="barra" name="barra" maxlength="14">
                 </div>
                 <div class="col-md-3">
                     <label class="col-form-label" for="qtd">Quantidade</label>

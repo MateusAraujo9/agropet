@@ -97,3 +97,37 @@ function pesquisaFornecedor() {
         }
     });
 }
+
+function fecharResultado() {
+    var node = document.getElementById("tabela");
+    var node1 = document.getElementById("pagi");
+    
+    if (node.parentNode) {
+        node.parentNode.removeChild(node);
+    }
+
+    if (node1.parentNode) {
+        node1.parentNode.removeChild(node1);
+    }
+}
+
+function paginaProduto(pagina, ultimaPagina, remove) {
+    if (remove === 0) {
+        fecharResultado();
+    }else{
+       removerComponentesPagination();
+    }
+
+    if (pagina == null){
+        console.log("sem pagina");
+    } else{
+        $.get("DAO/paginaProduto.php", "pagina="+pagina, function (data) {
+
+            let retorno = JSON.parse(data);
+
+            if (retorno.length > 0){
+                mudarPaginaProduto(retorno, pagina, ultimaPagina);
+            }
+        })
+    }
+}

@@ -52,11 +52,11 @@ if (
     if(!$sql) {
         echo "<script>";
         echo "alert('Produto Não cadastrado');";
-        echo "window.location.href = \"/#!/listUsuario\"";
+        echo "window.location.href = \"/#!/listProduto\"";
         echo "</script>";
 
     }
-    header("Location: /#/listProduto");
+    header("Location: /#!/listProduto");
 }
 
 
