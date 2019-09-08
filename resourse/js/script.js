@@ -27,6 +27,8 @@ app.config(function ($routeProvider) {
         .when("/setPaginaCliente/", {templateUrl: "setPaginaCliente.php"})
         .when("/listCliente/", {templateUrl: "listCliente.php"})
         .when("/cadCliente", {templateUrl: "cadCliente.html"})
+        .when("/listProduto/", {templateUrl: "listProduto.php"})
+        .when("/cadProduto", {templateUrl: "cadProduto.php"})
 });
 
 app.controller("meuAppCtrl", function ($scope, $http) {
@@ -73,3 +75,25 @@ function ativaTable(elemento) {
 
 }
 
+function pesquisaFornecedor() {
+    var pForn = document.getElementById("fornecedor");
+
+    //console.log("Vai pesquisar por: "+pFab.value);
+    var fornecedor = [];
+    $.get("DAO/consultaFornecedor.php", "pesquisa="+pForn.value, function( data ) {
+        //console.log(data);
+
+        var retorno = JSON.parse(data);
+        //console.log(retorno);
+        if (retorno.length == 0) {
+            //alert("Nenhum fornecedor encontrado.");
+            exibirAlerta(retorno.length);
+
+            pForn.value = "";
+        }else if(retorno.length == 1){
+            pForn.value = retorno[0].nome;
+        }else if (retorno.length > 1) {
+            exibirListaFornecedores(retorno);
+        }
+    });
+}

@@ -18,10 +18,12 @@ if ($logado == 'false' || empty($logado)){
     <link rel="stylesheet" href="resourse/css/bootstrap.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
     <!--React-->
     <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 
     <!--Angular-->
     <script src="resourse/js/angular.js"></script>
@@ -30,6 +32,7 @@ if ($logado == 'false' || empty($logado)){
     <!--Meus links-->
     <link rel="stylesheet" href="resourse/css/style.css">
     <script src="resourse/js/script.js"></script>
+    <script type="text/babel" src="resourse/js/react.js"></script>
     <meta charset="utf-8">
 </head>
 <body ng-app="meuApp" onload="setPagina(2)">
@@ -44,7 +47,7 @@ if ($logado == 'false' || empty($logado)){
             <li class="nav-item active" onmouseenter="subMenu('dropCadastro')" onmouseleave="subMenu('dropCadastro')">
                 <a class="nav-link" href="#">Cadastro <span class="sr-only">(current)</span></a>
                 <ul id="dropCadastro" class="esconde">
-                    <li class="itemDrop">Produto</li>
+                    <a href="#!listProduto" class="linkMenu"><li class="itemDrop">Produto</li></a>
                     <a href="#!listGrupo" class="linkMenu"><li class="itemDrop">Grupo</li></a>
                     <a href="#!listClasse" class="linkMenu"><li class="itemDrop">Classe</li></a>
                     <a href="#!listSubclasse" class="linkMenu"><li class="itemDrop">Subclasse</li></a>

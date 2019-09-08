@@ -82,3 +82,24 @@
     margin-right: 5px;
     height: 11px;
 }
+.button{
+    cursor: pointer ;
+}
+.button:hover{
+    background-color: #d7dbdf;
+}
+.modalSemRetorno{
+    width: 300px;
+    height: 80px;
+    background-color: red;
+    float: right;
+    position: absolute;
+    top: 41px;
+    margin-left: 80%;
+}
+.msgAlert{
+    color: RGBA(0, 0, 0, 0.7);
+}
+.mostrar{
+    display: block;
+}

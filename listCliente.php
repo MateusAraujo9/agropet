@@ -1,7 +1,6 @@
 <?php
 require "DAO/conection.php";
 
-$url = $_SERVER['REQUEST_URI'];
 $tkuser = isset($_COOKIE['tkuser'])?$_COOKIE['tkuser']:"";
 
 /*
