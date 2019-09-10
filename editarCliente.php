@@ -56,7 +56,7 @@ if (!empty($idClientePost)){
         echo "Erro: ".$e->getMessage();
     }
 
-    header("Location: http://agropet.pc/#!/listCliente/");
+    header("Location: /#!/listCliente/");
 }
 
 
@@ -73,7 +73,7 @@ if (!empty($idClientePost)){
 
 <div class="container">
     <div class="containerCenter2">
-        <a class="btn btn-outline-primary btn-sm" href="http://agropet.pc/#!/listCliente/"><img src="resourse/imagens/voltarP.png" class="imgVoltarP" alt="voltar">Voltar</a>
+        <a class="btn btn-outline-primary btn-sm" href="/#!/listCliente/"><img src="resourse/imagens/voltarP.png" class="imgVoltarP" alt="voltar">Voltar</a>
         <form method="post">
             <div class="form-group row">
                 <fieldset class="col-md-2">
