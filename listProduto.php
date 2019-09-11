@@ -62,6 +62,7 @@ if ($quantidadePaginas > intval($quantidadePaginas)){
         <th scope="col">Fornecedor</th>
         <th scope="col">Vl Compra</th>
         <th scope="col">Vl Venda</th>
+        <th scope="col">Opções</th>
     </tr>
     </thead>
     <tbody id="listItens">
@@ -74,6 +75,7 @@ if ($quantidadePaginas > intval($quantidadePaginas)){
         echo "    <td>".$p['nome_fornecedor']."</td>";
         echo "    <td>R$ ".$p['vlCompra']."</td>";
         echo "    <td>R$ ".$p['vlVenda']."</td>";
+        echo "    <td><img src=\"resourse/imagens/editar.png\" alt=\"editarProduto\" title=\"Editar\" class=\"btnListUser\" onclick=\"window.location='editarProduto.php?produto=".$p['id_produto']."'\"></td>";
         echo "</tr>";
     }
     echo "</tbody>";

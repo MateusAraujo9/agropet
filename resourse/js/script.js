@@ -29,6 +29,7 @@ app.config(function ($routeProvider) {
         .when("/cadCliente", {templateUrl: "cadCliente.html"})
         .when("/listProduto/", {templateUrl: "listProduto.php"})
         .when("/cadProduto", {templateUrl: "cadProduto.php"})
+        .when("/ajustePreco", {templateUrl: "ajustePrecoProduto.html"})
 });
 
 app.controller("meuAppCtrl", function ($scope, $http) {
@@ -87,7 +88,7 @@ function pesquisaFornecedor() {
         //console.log(retorno);
         if (retorno.length == 0) {
             //alert("Nenhum fornecedor encontrado.");
-            exibirAlerta(retorno.length);
+            exibirAlerta(retorno.length, "Fornecedor");
 
             pForn.value = "";
         }else if(retorno.length == 1){
@@ -127,6 +128,42 @@ function paginaProduto(pagina, ultimaPagina, remove) {
 
             if (retorno.length > 0){
                 mudarPaginaProduto(retorno, pagina, ultimaPagina);
+            }
+        })
+    }
+}
+
+function ajustePreco(id) {
+    let valor;
+    let pesquisa = document.getElementById("produto");
+    if (id === 0){
+        pesquisa = document.getElementById("produto");
+        valor = pesquisa.value;
+    }else{
+        valor = id;
+    }
+    if (valor == null) {
+        console.log("Nenhum produto informado");
+    }else{
+        $.get("DAO/consultaProduto.php", "pesquisa="+valor, function (data) {
+            let retorno = JSON.parse(data);
+
+            if (retorno.length === 0){
+                exibirAlerta(retorno.length, "Produto");
+
+                pesquisa.value = "";
+            }else if (retorno.length == 1) {
+                //React para mostrar campos de alteração de valor
+                let p = document.getElementById("idProduto");
+                p.innerText = retorno[0].id;
+
+                pesquisa.value = retorno[0].nome;
+                document.getElementById("btnAjuste").disabled = false;
+
+                ajustePrecoR(retorno);
+            }else{
+                //React para mostrar tela para escolher produto, e depois de escolher vai mostrar campos de alteração de valor
+                exibirListaProdutos(retorno);
             }
         })
     }

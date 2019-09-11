@@ -85,10 +85,43 @@ $qtdP = isset($_POST['qtd'])?$_POST['qtd']:"";
 $unidadeP = isset($_POST['unidade'])?$_POST['unidade']:"";
 $grupoP = isset($_POST['grupo'])?$_POST['grupo']:"";
 $classeP = isset($_POST['classe'])?$_POST['classe']:"";
-$subclasseP = isset($_POST['subcl'])?$_POST['subcl']:"";
+$subclasseP = isset($_POST['subCl'])?$_POST['subCl']:"";
 $fornecedorP = isset($_POST['fornecedor'])?$_POST['fornecedor']:"";
 $vlComP = isset($_POST['vlComp'])?$_POST['vlComp']:"";
 $vlVenP = isset($_POST['vlVen'])?$_POST['vlVen']:"";
+
+//Busca fornecedor
+$sqlF = "SELECT id FROM fornecedor WHERE nome = '$fornecedorP'";
+
+try{
+    $sqlF = $pdo->query($sqlF);
+
+    $fornecedorP = $sqlF->fetch()['id'];
+}catch (PDOException $e){
+    echo "Erro".$e->getMessage();
+}
+if (!empty($idProdutoPost)){
+    $sqlU = "UPDATE produto SET
+             nome = '$nomeP',
+             cod_barra = '$barraP',
+             quantidade = '$qtdP',
+             id_unidade = '$unidadeP',
+             id_fornecedor = '$fornecedorP',
+             id_grupo = '$grupoP',
+             id_classe = '$classeP',
+             id_subclasse = '$subclasseP',
+             valor_compra = '$vlComP',
+             valor_venda = '$vlVenP'
+             WHERE id = '$idProdutoPost'";
+
+    try{
+        $pdo->query($sqlU);
+    }catch (PDOException $e){
+        echo "Erro: ".$e->getMessage();
+    }
+
+    header("Location: /#!/listProduto/");
+}
 
 
 ?>

@@ -60,7 +60,7 @@ if ($logado == 'false' || empty($logado)){
                 <a class="nav-link" href="#">Gestão de Produto</a>
                 <ul id="dropGestaoProduto" class="esconde">
                     <li class="itemDrop">Entrada de Estoque</li>
-                    <li class="itemDrop">Ajuste de Preço</li>
+                    <a href="#!ajustePreco" class="linkMenu"><li class="itemDrop">Ajuste de Preço</li></a>
                     <li class="itemDrop">Conversão de Estoque</li>
                 </ul>
             </li>

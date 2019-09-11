@@ -9,8 +9,8 @@ class Alert extends React.Component{
     render(){
         return(
             <div className="alert alert-warning fade show" role="alert">
-                <p className="msgAlert">Nenhum fornecedor encontrado!
-                    <button className="close" onClick={fecharAlerta} aria-label="Fechar">
+                <p className="msgAlert">Nenhum {this.props.tipo} encontrado!
+                    <button className="close" onClick={fecharCompReact} aria-label="Fechar">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </p>
@@ -19,10 +19,10 @@ class Alert extends React.Component{
     }
 }
 
-function exibirAlerta(quant) {
+function exibirAlerta(quant, tipo) {
     if (quant == 0) {
         let elemento = (
-            <Alert/>
+            <Alert tipo={tipo}/>
         )
 
         ReactDOM.render(
@@ -32,7 +32,7 @@ function exibirAlerta(quant) {
     }
 }
 
-function fecharAlerta() {
+function fecharCompReact() {
     ReactDOM.unmountComponentAtNode(document.getElementById("compReact"));
 }
 
@@ -51,13 +51,32 @@ class TableHead extends React.Component {
     }
 }
 
+class BotaoSelecionar extends React.Component{
+    render(){
+        let elBtn;
+
+        if (this.props.tipo === "fornecedor"){
+            elBtn = (
+                <button onClick={()=>{setFornecedor(this.props.nome)}} className="btn btn-success btn-sm">Selecionar</button>
+            )
+        }else if (this.props.tipo === "produto"){
+            elBtn = (
+                <button onClick={()=>{setProdutoAjuste(this.props.id)}} className="btn btn-success btn-sm">Selecionar</button>
+            )
+        }
+
+        return elBtn;
+    }
+
+}
+
 class TableLinha extends React.Component{
     render(){
         return(
           <tr>
               <td>{this.props.id}</td>
               <td>{this.props.nome}</td>
-              <td> <button onClick={()=>{setFornecedor(this.props.nome)}} className="btn btn-success btn-sm">Selecionar</button></td>
+              <td> <BotaoSelecionar id={this.props.id} nome={this.props.nome} tipo={this.props.tipo}/></td>
           </tr>
         );
     }
@@ -68,7 +87,7 @@ class TableFornecedores extends React.Component{
         let cont = 0;
         let lista =this.props.fornecedores.map((item)=>{
             return(
-                <TableLinha key={item.id} id={item.id} nome={item.nome}/>
+                <TableLinha key={item.id} id={item.id} nome={item.nome} tipo="fornecedor"/>
             );
         });
 
@@ -108,7 +127,7 @@ class ModalFornecedor extends React.Component{
                             <TableFornecedores fornecedores={this.props.fornecedores}/>
                         </div>
                         <div className="modal-footer">
-                            <button onClick={fecharAlerta} className="btn btn-secondary">Sair</button>
+                            <button onClick={fecharCompReact} className="btn btn-secondary">Sair</button>
                         </div>
                     </div>
                 </div>
@@ -134,7 +153,7 @@ function setFornecedor(nome) {
 
     campoFornecedor.value = nome;
 
-    fecharAlerta();
+    fecharCompReact();
 }
 
 //Pagina de Produtos
@@ -147,8 +166,9 @@ class LinhaProduto extends React.Component{
               <td>{this.props.nomeP}</td>
               <td>{this.props.barra}</td>
               <td>{this.props.nomeF}</td>
-              <td>{this.props.vlComp}</td>
-              <td>{this.props.vlVend}</td>
+              <td>R${this.props.vlComp}</td>
+              <td>R${this.props.vlVend}</td>
+              <td><img src="/resourse/imagens/editar.png" alt="editarProduto" title="Editar" className="btnListUser" onClick={()=>{window.location='editarProduto.php?produto='+this.props.id}}/></td>
           </tr>
         );
     }
@@ -226,6 +246,7 @@ class TabelaHead extends React.Component{
                     <th scope="col">Fornecedor</th>
                     <th scope="col">Vl Compra</th>
                     <th scope="col">Vl Venda</th>
+                    <th scope="col">Opções</th>
                 </tr>
             </thead>
         );
@@ -266,4 +287,120 @@ function mudarPaginaProduto(lista, pagina, ultimaPagina) {
 function removerComponentesPagination() {
     ReactDOM.unmountComponentAtNode(document.getElementById("tabela"));
     ReactDOM.unmountComponentAtNode(document.getElementById("pagi2"));
+}
+
+function ajustePrecoR(produto) {
+    let elAjusteProduto = (
+      <AjusteProduto produto={produto}/>
+    );
+
+    ReactDOM.render(
+        elAjusteProduto,
+        document.getElementById("compR")
+    )
+}
+
+class AjusteProduto extends React.Component{
+    constructor(props){
+        super(props);
+        this.state={
+            vlComp: this.props.produto[0].valor_compra,
+            vlVen: this.props.produto[0].valor_venda
+        };
+        this.trocarVlComp = this.trocarVlComp.bind(this);
+        this.trocarvlVen = this.trocarvlVen.bind(this);
+    }
+
+    trocarVlComp(e){
+       let novoValor = e.target.value;
+
+       this.setState({vlComp:novoValor});
+    }
+
+    trocarvlVen(e){
+        let novoValor = e.target.value;
+
+        this.setState({vlVen:novoValor});
+    }
+
+    render(){
+        return(
+          <div className="form-group row grupoAjuste">
+              <div className="col-md-5">
+                  <label className="col-form-label" htmlFor="vlComp">Valor de Compra</label>
+                  <div className="input-group-prepend">
+                      <span className="input-group-text">R$</span>
+                      <input type="text" className="form-control" id="vlComp" name="vlComp" value={this.state.vlComp} onChange={this.trocarVlComp}/>
+                  </div>
+              </div>
+              <div className="col-md-5 elementoR">
+                  <label className="col-form-label" htmlFor="vlVen">Valor de Venda</label>
+                  <div className="input-group-prepend">
+                      <span className="input-group-text">R$</span>
+                      <input type="text" className="form-control" id="vlVen" name="vlVen" value={this.state.vlVen} onChange={this.trocarvlVen}/>
+                  </div>
+              </div>
+          </div>
+        );
+    }
+}
+
+function exibirListaProdutos(produtos) {
+    let elLista = (
+        <ModalProduto produtos={produtos}/>
+    );
+
+    ReactDOM.render(
+        elLista,
+        document.getElementById("compReact")
+    )
+}
+
+class ModalProduto extends React.Component{
+    render(){
+        return(
+            <div>
+                <div className="modal mostrar" id="janelaProduto">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5>Escolha um Produto</h5>
+                            </div>
+                            <div className="modal-body">
+                                <TProdutoLista produtos={this.props.produtos}/>
+                            </div>
+                            <div className="modal-footer">
+                                <button onClick={fecharCompReact} className="btn btn-secondary">Sair</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="modal-backdrop"></div>
+            </div>
+        );
+    }
+}
+
+class TProdutoLista extends React.Component{
+    render(){
+        let lista =this.props.produtos.map((item)=>{
+            return(
+                <TableLinha key={item.id} id={item.id} nome={item.nome} tipo="produto"/>
+            );
+        });
+
+        return(
+            <table className="table table-hover">
+                <TableHead/>
+                <tbody>
+                {lista}
+                </tbody>
+            </table>
+        );
+    }
+}
+
+function setProdutoAjuste(id) {
+    fecharCompReact();
+    ajustePreco(id);
 }
