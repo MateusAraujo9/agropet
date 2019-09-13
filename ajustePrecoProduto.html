@@ -1,12 +1,10 @@
-
-
 <div class="container">
     <div class="containerCenter">
         <div id="compReact"></div>
         <h3 class="titulo">Ajuste de Preço - Produto</h3>
-        <form action="" method="post">
+        <form action="DAO/alteraValorProduto.php" method="post">
             <div class="form-group">
-                <label class="col-form-label" for="produto">Produto - <span id="idProduto"></span></label>
+                <label class="col-form-label" for="produto">Produto - <input class="form-control campId" id="idProduto" name="idProduto" type="text" value="5" readonly=""></label>
                 <div class="form-group">
                     <div class="input-group mb-3">
                         <input type="text" class="form-control" id="produto" name="produto">

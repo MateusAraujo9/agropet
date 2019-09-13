@@ -61,7 +61,7 @@ if ($logado == 'false' || empty($logado)){
                 <ul id="dropGestaoProduto" class="esconde">
                     <li class="itemDrop">Entrada de Estoque</li>
                     <a href="#!ajustePreco" class="linkMenu"><li class="itemDrop">Ajuste de Preço</li></a>
-                    <li class="itemDrop">Conversão de Estoque</li>
+                    <a href="#!convertEstoque" class="linkMenu"><li class="itemDrop">Conversão de Estoque</li></a>
                 </ul>
             </li>
             <li class="nav-item">
@@ -78,7 +78,7 @@ if ($logado == 'false' || empty($logado)){
 
             $usuario = $sql->fetch();
 
-            echo "<p class='userLogado'>Bem vindo, ".$usuario['nome']."</p><a class='btnSair' href='logout.php'>sair</a>";
+            echo "<p class='userLogado'>Bem vindo(a), ".$usuario['nome']."</p><a class='btnSair' href='logout.php'>sair</a>";
         }
 
 

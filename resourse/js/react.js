@@ -36,6 +36,10 @@ function fecharCompReact() {
     ReactDOM.unmountComponentAtNode(document.getElementById("compReact"));
 }
 
+function fecharCompR() {
+    ReactDOM.unmountComponentAtNode(document.getElementById("compR"));
+}
+
 
 class TableHead extends React.Component {
     render() {
@@ -59,9 +63,13 @@ class BotaoSelecionar extends React.Component{
             elBtn = (
                 <button onClick={()=>{setFornecedor(this.props.nome)}} className="btn btn-success btn-sm">Selecionar</button>
             )
-        }else if (this.props.tipo === "produto"){
+        }else if (this.props.tipo === "produtoAjuste"){
             elBtn = (
                 <button onClick={()=>{setProdutoAjuste(this.props.id)}} className="btn btn-success btn-sm">Selecionar</button>
+            )
+        }else if (this.props.tipo === "produtoConvert"){
+            elBtn = (
+                <button onClick={()=>{setProdutoConvert(this.props.id, this.props.local)}} className="btn btn-success btn-sm">Selecionar</button>
             )
         }
 
@@ -76,7 +84,7 @@ class TableLinha extends React.Component{
           <tr>
               <td>{this.props.id}</td>
               <td>{this.props.nome}</td>
-              <td> <BotaoSelecionar id={this.props.id} nome={this.props.nome} tipo={this.props.tipo}/></td>
+              <td> <BotaoSelecionar id={this.props.id} nome={this.props.nome} tipo={this.props.tipo} local={this.props.local}/></td>
           </tr>
         );
     }
@@ -224,7 +232,7 @@ class Paginacao extends React.Component{
                   </li>:""
               }
               <li className="page-item active">
-                  <a className="page-link" href="javascript:;" onClick={()=>{paginaProduto(pagina, pagina, 1)}}>{pagina}</a>
+                  <a className="page-link" href="javascript:;" onClick={()=>{paginaProduto(pagina, ultPagina, 1)}}>{pagina}</a>
               </li>
               {proxP}
               <li className="page-item">
@@ -345,9 +353,9 @@ class AjusteProduto extends React.Component{
     }
 }
 
-function exibirListaProdutos(produtos) {
+function exibirListaProdutos(produtos, tela, local) {
     let elLista = (
-        <ModalProduto produtos={produtos}/>
+        <ModalProduto produtos={produtos} tela={tela} local={local}/>
     );
 
     ReactDOM.render(
@@ -367,7 +375,7 @@ class ModalProduto extends React.Component{
                                 <h5>Escolha um Produto</h5>
                             </div>
                             <div className="modal-body">
-                                <TProdutoLista produtos={this.props.produtos}/>
+                                <TProdutoLista produtos={this.props.produtos} tela={this.props.tela} local={this.props.local}/>
                             </div>
                             <div className="modal-footer">
                                 <button onClick={fecharCompReact} className="btn btn-secondary">Sair</button>
@@ -385,7 +393,7 @@ class TProdutoLista extends React.Component{
     render(){
         let lista =this.props.produtos.map((item)=>{
             return(
-                <TableLinha key={item.id} id={item.id} nome={item.nome} tipo="produto"/>
+                <TableLinha key={item.id} id={item.id} nome={item.nome} tipo={this.props.tela} local={this.props.local}/>
             );
         });
 
@@ -403,4 +411,9 @@ class TProdutoLista extends React.Component{
 function setProdutoAjuste(id) {
     fecharCompReact();
     ajustePreco(id);
+}
+
+function setProdutoConvert(id, local) {
+    fecharCompReact();
+    pesquisaProdutoConvert(id, local);
 }

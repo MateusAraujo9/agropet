@@ -30,6 +30,7 @@ app.config(function ($routeProvider) {
         .when("/listProduto/", {templateUrl: "listProduto.php"})
         .when("/cadProduto", {templateUrl: "cadProduto.php"})
         .when("/ajustePreco", {templateUrl: "ajustePrecoProduto.html"})
+        .when("/convertEstoque", {templateUrl: "conversaoDeEstoque.html"})
 });
 
 app.controller("meuAppCtrl", function ($scope, $http) {
@@ -137,7 +138,6 @@ function ajustePreco(id) {
     let valor;
     let pesquisa = document.getElementById("produto");
     if (id === 0){
-        pesquisa = document.getElementById("produto");
         valor = pesquisa.value;
     }else{
         valor = id;
@@ -155,16 +155,72 @@ function ajustePreco(id) {
             }else if (retorno.length == 1) {
                 //React para mostrar campos de alteração de valor
                 let p = document.getElementById("idProduto");
-                p.innerText = retorno[0].id;
+                p.value = retorno[0].id;
 
                 pesquisa.value = retorno[0].nome;
                 document.getElementById("btnAjuste").disabled = false;
-
+                fecharCompR();
                 ajustePrecoR(retorno);
             }else{
                 //React para mostrar tela para escolher produto, e depois de escolher vai mostrar campos de alteração de valor
-                exibirListaProdutos(retorno);
+                exibirListaProdutos(retorno, "produtoAjuste", "x");
             }
         })
     }
+}
+
+function pesquisaProdutoConvert(id, local) {
+    let valor;
+    if (id===0){
+        if (local === "origem"){
+            let p = document.getElementById("produtoOrigem");
+            valor = p.value;
+        } else{
+            let p = document.getElementById("produtoDestino");
+            valor = p.value;
+        }
+    }else{
+        valor = id;
+    }
+
+    $.get("DAO/consultaProduto.php", "pesquisa="+valor, function (data) {
+        let retorno = JSON.parse(data);
+
+        if (retorno.length === 0){
+            exibirAlerta(retorno.length, "Produto");
+
+            if (local === "origem") {
+                document.getElementById("produtoOrigem").value = "";
+            }else{
+                document.getElementById("produtoDestino").value = "";
+            }
+
+        }else if (retorno.length === 1) {
+            if (local === "origem") {
+                document.getElementById("produtoOrigem").value = retorno[0].nome;
+                document.getElementById("idProdutoOrigem").value = retorno[0].id;
+
+            }else{
+                document.getElementById("produtoDestino").value = retorno[0].nome;
+                document.getElementById("idProdutoDestino").value = retorno[0].id;
+            }
+        }else if (retorno.length > 1) {
+            exibirListaProdutos(retorno, "produtoConvert", local);
+        }
+
+    })
+
+
+}
+
+function calculaEstoqueDestino() {
+    let estoqueO = document.getElementById("estoqueOrigem");
+    let ftConvert = document.getElementById("fator");
+    let estoqueD = document.getElementById("estoqueDestino");
+
+    let vlEstO = estoqueO.value.toString().replace(",", ".");
+    let vlFator = ftConvert.value.toString().replace(",", ".");
+
+    estoqueD.value = vlEstO*vlFator;
+
 }

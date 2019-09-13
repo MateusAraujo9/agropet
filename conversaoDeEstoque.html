@@ -1,0 +1,50 @@
+<div class="container">
+    <div class="containerCenter2">
+        <div id="compReact"></div>
+        <h3 class="titulo">Conversão de Estoque - Produto</h3>
+        <form action="DAO/converterEstoque.php" method="post">
+            <div class="formConvert">
+                <div class="form-group">
+                    <label class="col-form-label" for="produtoOrigem">Produto Origem - <input class="form-control campId" id="idProdutoOrigem" name="idProdutoOrigem" type="text" readonly=""></label>
+                    <div class="form-group">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="produtoOrigem" name="produtoOrigem">
+                            <div class="input-group-append">
+                                <span class="input-group-text button" onclick="pesquisaProdutoConvert(0, 'origem')"><img src="resourse/imagens/lupa.png" alt="lupa" title="Pesquisar"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="estoqueOrigem" class="col-form-label">Estoque</label>
+                        <input type="text" class="form-control" id="estoqueOrigem" name="estoqueOrigem" onkeyup="calculaEstoqueDestino()" onkeydown="calculaEstoqueDestino()" >
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top: 5px;">
+                    <label class="col-form-label" for="fator">Fator de Conversão</label>
+                    <div class="form-group mb-3">
+                        <input type="text" id="fator" class="form-control" onkeyup="calculaEstoqueDestino()" onkeydown="calculaEstoqueDestino()">
+                    </div>
+                    <div class="imgConver">
+                        <img src="resourse/imagens/seta-apontando-para-a-direita.png" id="setaConvert" alt="setaD">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-form-label" for="produtoDestino">Produto Destino - <input class="form-control campId" id="idProdutoDestino" name="idProdutoDestino" type="text" readonly=""></label>
+                    <div class="form-group">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="produtoDestino" name="produtoDestino">
+                            <div class="input-group-append">
+                                <span class="input-group-text button" onclick="pesquisaProdutoConvert(0, 'destino')"><img src="resourse/imagens/lupa.png" alt="lupa" title="Pesquisar"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="estoqueDestino" class="col-form-label">Estoque</label>
+                        <input type="text" class="form-control" id="estoqueDestino" readonly="" name="estoqueDestino">
+                    </div>
+                </div>
+            </div>
+            <input type="submit" class="btn btn-primary btn-lg btn-block" value="Salvar">
+        </form>
+    </div>
+</div>

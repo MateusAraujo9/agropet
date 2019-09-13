@@ -106,3 +106,19 @@
 .elementoR{
     margin-left: 40px;
 }
+.campId{
+    width: 20px;
+    height: 30px;
+    margin-left: 10px;
+    float: right;
+}
+.formConvert{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.imgConver{
+    display: flex;
+    justify-content: center;
+}
