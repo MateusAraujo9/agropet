@@ -117,8 +117,67 @@
     flex-direction: row;
     justify-content: space-between;
 }
-
 .imgConver{
     display: flex;
     justify-content: center;
+}
+.formEntrada{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+.imgEntrada{
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+.pequenoCampo{
+    background-color: #e9ecef;
+    max-width: 45px;
+    height: 30px;
+    margin-left: 10px;
+    float: right;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 0.25rem;
+    text-align: center;
+}
+#rs{
+    font-size: 25px;
+}
+
+/*Caixa*/
+.componentR{
+    overflow: auto;
+    height: 300px;
+    width: 600px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    float: left;
+}
+
+.valoresCaixa{
+    height: 300px;
+    width: 490px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    float: right;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+
+.inputCaixaQtd{
+
+}
+.linhaCaixa{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.camposCaixa{
+    margin: 5px;
+    box-sizing: border-box;
+}
+.botaoCaixa{
+    margin-top: 15px;
 }

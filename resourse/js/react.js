@@ -71,6 +71,10 @@ class BotaoSelecionar extends React.Component{
             elBtn = (
                 <button onClick={()=>{setProdutoConvert(this.props.id, this.props.local)}} className="btn btn-success btn-sm">Selecionar</button>
             )
+        }else if(this.props.tipo === "produtoEntrada"){
+            elBtn = (
+                <button onClick={()=>{setProdutoEntrada(this.props.id)}} className="btn btn-success btn-sm">Selecionar</button>
+            )
         }
 
         return elBtn;
@@ -408,6 +412,66 @@ class TProdutoLista extends React.Component{
     }
 }
 
+class ListaProdutoEntrada extends React.Component{
+     render(){
+        let lista = this.props.listaP.map((item)=>{
+            return(
+              <LinhaProdutoEntrada
+                  key={item.idProduto}
+                  id={item.idProduto}
+                  nome={item.nome}
+                  custoU={item.custoU}
+                  custoT={item.custoT}
+                  quantidade={item.quantidade}
+              />
+            );
+        });
+
+        return (
+            <table className="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Custo Unitário</th>
+                    <th scope="col">Custo Total</th>
+                    <th scope="col">Quantidade</th>
+                </tr>
+                </thead>
+                <tbody>
+                {lista}
+                </tbody>
+            </table>
+            );
+    }
+
+}
+
+class LinhaProdutoEntrada extends React.Component{
+    render(){
+        return(
+            <tr>
+                <td>{this.props.id}</td>
+                <td>{this.props.nome}</td>
+                <td>{this.props.custoU}</td>
+                <td>{this.props.custoT}</td>
+                <td>{this.props.quantidade}</td>
+            </tr>
+        );
+    }
+}
+
+function TabelaProdutosEntrada(listaProdutos) {
+    let elLista = (
+        <ListaProdutoEntrada listaP={listaProdutos}/>
+    );
+
+    ReactDOM.render(
+        elLista,
+        document.getElementById("compR")
+    )
+}
+
 function setProdutoAjuste(id) {
     fecharCompReact();
     ajustePreco(id);
@@ -416,4 +480,9 @@ function setProdutoAjuste(id) {
 function setProdutoConvert(id, local) {
     fecharCompReact();
     pesquisaProdutoConvert(id, local);
+}
+
+function setProdutoEntrada(id) {
+    fecharCompReact();
+    entradaProduto(id);
 }

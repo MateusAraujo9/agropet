@@ -20,6 +20,8 @@ if ($logado == 'false' || empty($logado)){
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
+    <script src="https://igorescobar.github.io/jQuery-Mask-Plugin/js/jquery.mask.min.js"></script>
+
     <!--React-->
     <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
@@ -59,13 +61,13 @@ if ($logado == 'false' || empty($logado)){
             <li class="nav-item" onmouseenter="subMenu('dropGestaoProduto')" onmouseleave="subMenu('dropGestaoProduto')">
                 <a class="nav-link" href="#">Gestão de Produto</a>
                 <ul id="dropGestaoProduto" class="esconde">
-                    <li class="itemDrop">Entrada de Estoque</li>
+                    <a href="#!entradaEstoque" class="linkMenu"><li class="itemDrop">Entrada de Estoque</li></a>
                     <a href="#!ajustePreco" class="linkMenu"><li class="itemDrop">Ajuste de Preço</li></a>
                     <a href="#!convertEstoque" class="linkMenu"><li class="itemDrop">Conversão de Estoque</li></a>
                 </ul>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Caixa</a>
+                <a class="nav-link" href="#!caixa">Caixa</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Relatórios</a>

@@ -1,9 +1,11 @@
 var pagina;
+const listaProdutos = [];
+const produtoC = {};
 
 function subMenu(sub) {
-    var subMenu = document.getElementById(sub);
+    let subMenu = document.getElementById(sub);
 
-    if (subMenu.getAttribute("class")=="esconde" || subMenu.getAttribute("class") == null){
+    if (subMenu.getAttribute("class")==="esconde" || subMenu.getAttribute("class") == null){
         subMenu.setAttribute("class", "");
     } else{
         subMenu.setAttribute("class", "esconde");
@@ -31,6 +33,8 @@ app.config(function ($routeProvider) {
         .when("/cadProduto", {templateUrl: "cadProduto.php"})
         .when("/ajustePreco", {templateUrl: "ajustePrecoProduto.html"})
         .when("/convertEstoque", {templateUrl: "conversaoDeEstoque.html"})
+        .when("/entradaEstoque", {templateUrl: "entradaEstoque.html"})
+        .when("/caixa", {templateUrl: "caixa.html"})
 });
 
 app.controller("meuAppCtrl", function ($scope, $http) {
@@ -38,7 +42,7 @@ app.controller("meuAppCtrl", function ($scope, $http) {
         $http.get('http://agropet.pc/setPaginaCliente.php?pagina='+pg);
         reload();
     }
-})
+});
 
 function reload() {
     window.location.reload();
@@ -56,7 +60,7 @@ function setPagina(numero) {
     pagina = numero;
 }
 function definirPagina() {
-    var input = document.getElementById(pagina);
+    let input = document.getElementById(pagina);
     input.setAttribute("value", getPagina());
 
     document.getElementById("auto_enviar").submit();
@@ -64,12 +68,12 @@ function definirPagina() {
 }
 
 function trocaSenha(id) {
-    var elemento = document.getElementById("idUsuario");
+    let elemento = document.getElementById("idUsuario");
     elemento.setAttribute("value", id);
 }
 
 function ativaTable(elemento) {
-    if (elemento.getAttribute("class") == "table-active"){
+    if (elemento.getAttribute("class") === "table-active"){
         elemento.setAttribute("class", "");
     } else{
         elemento.setAttribute("class", "table-active");
@@ -78,21 +82,20 @@ function ativaTable(elemento) {
 }
 
 function pesquisaFornecedor() {
-    var pForn = document.getElementById("fornecedor");
+    let pForn = document.getElementById("fornecedor");
 
-    //console.log("Vai pesquisar por: "+pFab.value);
-    var fornecedor = [];
+
     $.get("DAO/consultaFornecedor.php", "pesquisa="+pForn.value, function( data ) {
         //console.log(data);
 
-        var retorno = JSON.parse(data);
+        let retorno = JSON.parse(data);
         //console.log(retorno);
-        if (retorno.length == 0) {
+        if (retorno.length === 0) {
             //alert("Nenhum fornecedor encontrado.");
             exibirAlerta(retorno.length, "Fornecedor");
 
             pForn.value = "";
-        }else if(retorno.length == 1){
+        }else if(retorno.length === 1){
             pForn.value = retorno[0].nome;
         }else if (retorno.length > 1) {
             exibirListaFornecedores(retorno);
@@ -101,8 +104,8 @@ function pesquisaFornecedor() {
 }
 
 function fecharResultado() {
-    var node = document.getElementById("tabela");
-    var node1 = document.getElementById("pagi");
+    let node = document.getElementById("tabela");
+    let node1 = document.getElementById("pagi");
     
     if (node.parentNode) {
         node.parentNode.removeChild(node);
@@ -152,7 +155,7 @@ function ajustePreco(id) {
                 exibirAlerta(retorno.length, "Produto");
 
                 pesquisa.value = "";
-            }else if (retorno.length == 1) {
+            }else if (retorno.length === 1) {
                 //React para mostrar campos de alteração de valor
                 let p = document.getElementById("idProduto");
                 p.value = retorno[0].id;
@@ -224,3 +227,132 @@ function calculaEstoqueDestino() {
     estoqueD.value = vlEstO*vlFator;
 
 }
+
+
+function entradaProduto(id) {
+    let elPesquisa = document.getElementById("produto");
+    let vlPesquisa = "";
+    if (id !== 0) {
+        vlPesquisa = id;
+    }else{
+        vlPesquisa = elPesquisa.value;
+    }
+
+    $.get("DAO/consultaProduto.php", "pesquisa="+vlPesquisa, function (data) {
+        let retorno = JSON.parse(data);
+
+        if (retorno.length === 0){
+            exibirAlerta(retorno.length, "Produto");
+        }else if (retorno.length === 1){
+            let idProduto = document.getElementById("idProduto");
+            let elUnidade = document.getElementById("unidade");
+            let vlComp = document.getElementById("vlComp");
+
+            vlComp.value = retorno[0].valor_compra;
+            elPesquisa.value = retorno[0].nome;
+            elUnidade.value = retorno[0].sigla;
+            idProduto.value = retorno[0].id;
+        }else if (retorno.length > 1) {
+            exibirListaProdutos(retorno, "produtoEntrada", "x");
+        }
+    })
+}
+
+function addProdutoEntrada() {
+   //elementos
+    let elIdProduto = document.getElementById("idProduto");
+    let elNomeProduto = document.getElementById("produto");
+    let elCusto = document.getElementById("vlComp");
+    let elQuantidade = document.getElementById("quantidade");
+
+    //valores
+    let idProduto = elIdProduto.value;
+    let nomeProduto = elNomeProduto.value;
+    let custoU = parseFloat(elCusto.value); //custo unitário
+    let quantidade = parseFloat(elQuantidade.value);
+    let custoT = custoU*quantidade;
+
+    //impedir que adicione produto sem informação
+    if(nomeProduto==="" || custoU ==="" || quantidade===""){
+        alert("Preencha todos os campos do produto (nome, custo e quantidade)");
+        return 0;
+    }else if(idProduto===""){
+        alert("Você deve pesquisar o produto clicando na lupa");
+        return 0;
+    }
+    //Criar objeto
+    let objProduto = new Object();
+
+    objProduto.idProduto = idProduto;
+    objProduto.nome = nomeProduto;
+    objProduto.custoU = custoU;
+    objProduto.custoT = custoT;
+    objProduto.quantidade = quantidade;
+
+    listaProdutos.push(objProduto);
+
+    TabelaProdutosEntrada(listaProdutos);
+
+    limpaProdutoEntrada();
+}
+
+function limpaProdutoEntrada() {
+    document.getElementById("idProduto").value = "";
+    document.getElementById("produto").value = "";
+    document.getElementById("vlComp").value = "";
+    document.getElementById("quantidade").value = "";
+    document.getElementById("unidade").value = "";
+}
+
+function realizarEntrada() {
+    let fornecedor = document.getElementById("fornecedor").value;
+    let dataEntrada = document.getElementById("dataEntrada").value;
+
+    if (fornecedor === "" || dataEntrada==="" || listaProdutos.length===0){
+        alert("Campos obrigatórios não informados");
+    }else{
+        $.post("DAO/entradaEstoque.php", {lista:listaProdutos, fornecedor:fornecedor, dataEntrada:dataEntrada}, function (data) {
+            let retorno = data.toString();
+            if (retorno === "sucesso") {
+                alert("Entrada realizada com sucesso");
+
+                listaProdutos.pop();
+                location.reload();
+            }else{
+                alert("Entrada não realizada, verifique as informações.");
+            }
+        })
+    }
+}
+
+function pesquisaProdutoCaixa(pesquisa){
+    $.get("DAO/consultaProduto.php", "pesquisa="+pesquisa, function (data) {
+       let retorno = JSON.parse(data);
+
+       if (retorno.length === 0) {
+           exibirAlerta(retorno.length, "Produto");
+
+       }else if (retorno.length===1){
+            $('#produto')[0].value = retorno[0].nome;
+            produtoC.id = retorno[0].id;
+            produtoC.nome = retorno[0].nome;
+            produtoC.vlBruto = retorno[0].valor_venda;
+            produtoC.vlLiquido = retorno[0].valor_venda;
+
+            $('#vlUnit')[0].value = retorno[0].valor_venda;
+
+
+           $('#quantidade').focus();
+       } else if (retorno.length > 1) {
+
+
+       }
+    });
+}
+
+//Mascaras jquery
+$('.valor').mask('#.##0,00', {reverse: true});
+$('.quantidade').mask('#.##0', {reverse: true});
+$('.quantidadeDec').mask('#.##0,000', {reverse: true});
+$('.desconto').mask('00,00', {reverse: true});
+$('.valorVenda').mask('#.##0,000', {reverse: true});

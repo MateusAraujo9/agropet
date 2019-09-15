@@ -1,0 +1,61 @@
+<div class="container">
+    <div class="containerCenter2">
+        <div id="compReact"></div>
+        <h3 class="titulo">Entrada de Estoque - Produto</h3>
+
+        <form action="DAO/entradaEstoque.php" method="post" onsubmit="realizarEntrada(); return false;">
+            <div class="formEntrada">
+                <div class="form-group">
+                    <label class="col-form-label" for="fornecedor">*Fornecedor</label>
+                    <div class="form-group">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="fornecedor" name="fornecedor">
+                            <div class="input-group-append">
+                                <span class="input-group-text button" onclick="pesquisaFornecedor()"><img src="resourse/imagens/lupa.png" alt="lupa" title="Pesquisar"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-form-label" for="dataEntrada">*Data Entrada</label>
+                    <input class="form-control" type="date" id="dataEntrada" name="dataEntrada">
+                </div>
+            </div>
+            <div class="formEntrada">
+                <div class="form-group">
+                    <label class="col-form-label" for="produto">*Produto - <input class="form-control campId" id="idProduto" name="idProduto" type="text" readonly=""></label>
+                    <div class="form-group">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="produto" name="produto">
+                            <div class="input-group-append">
+                                <span class="input-group-text button" onclick="entradaProduto(0)"><img src="resourse/imagens/lupa.png" alt="lupa" title="Pesquisar"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               <div class="form-group" style="margin-top: 5px;">
+                   <label class="col-form-label" for="vlComp">Custo Unitário</label>
+                   <div class="input-group-prepend">
+                      <span id="rs">R$ </span><input type="text" class="form-control valor" id="vlComp" name="vlComp" maxlength=12>
+                   </div>
+               </div>
+               <div class="form-group" style="margin-top: 1px;">
+                   <label for="quantidade" class="col-form-label">Quantidade - <input type="text" class="pequenoCampo" id="unidade" name="unidade" readonly=""></label>
+                   <input type="text" id="quantidade" name="quantidade" class="form-control quantidade" maxlength="6">
+               </div>
+           </div>
+           <div class="form-group row formEntrada">
+               <input type="submit" value="Confirmar Entrada" class="btn btn-primary col-md-8" id="btnAjuste">
+               <button class="btn btn-success col-md-3" type="button" onclick="addProdutoEntrada()">Inserir Produto <img src="resourse/imagens/adicionar2.png" class="imgEntrada" alt="adicionar"></button>
+           </div>
+            <hr>
+
+            <!--Componente react-->
+            <div id="compR"></div>
+        </form>
+    </div>
+</div>
+
+<script type="text/babel">
+    TabelaProdutosEntrada();
+</script>
