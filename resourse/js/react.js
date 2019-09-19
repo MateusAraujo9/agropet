@@ -7,12 +7,24 @@ class Alert extends React.Component{
     }
 
     render(){
+        let elBtn = "";
+        if(this.props.tipo === "Cliente"){
+            elBtn = (
+                <button className="close" onClick={fecharPesquisaReact} aria-label="Fechar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            )
+        }else{
+            elBtn = (
+                <button className="close" onClick={fecharCompReact} aria-label="Fechar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            )
+        }
         return(
             <div className="alert alert-warning fade show" role="alert">
                 <p className="msgAlert">Nenhum {this.props.tipo} encontrado!
-                    <button className="close" onClick={fecharCompReact} aria-label="Fechar">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    {elBtn}
                 </p>
             </div>
         );
@@ -20,15 +32,22 @@ class Alert extends React.Component{
 }
 
 function exibirAlerta(quant, tipo) {
-    if (quant == 0) {
+    if (quant === 0) {
         let elemento = (
             <Alert tipo={tipo}/>
-        )
+        );
 
-        ReactDOM.render(
-            elemento,
-            document.getElementById("compReact")
-        )
+        if (tipo === "Cliente"){
+            ReactDOM.render(
+                elemento,
+                document.getElementById("pesquisaReact")
+            )
+        }else{
+            ReactDOM.render(
+                elemento,
+                document.getElementById("compReact")
+            )
+        }
     }
 }
 
@@ -74,6 +93,14 @@ class BotaoSelecionar extends React.Component{
         }else if(this.props.tipo === "produtoEntrada"){
             elBtn = (
                 <button onClick={()=>{setProdutoEntrada(this.props.id)}} className="btn btn-success btn-sm">Selecionar</button>
+            )
+        }else if (this.props.tipo === "produtoCaixa"){
+            elBtn = (
+                <button onClick={()=>{setProdutoCaixa(this.props.id)}} className="btn btn-success btn-sm">Selecionar</button>
+            )
+        }else if (this.props.tipo === "cliente") {
+            elBtn = (
+                <button onClick={()=>{setClienteVenda(this.props.id)}} className="btn btn-success btn-sm">Selecionar</button>
             )
         }
 
@@ -472,6 +499,378 @@ function TabelaProdutosEntrada(listaProdutos) {
     )
 }
 
+class ListaProdutoCaixa extends React.Component{
+    render(){
+        return(
+            <div>
+                <div className="modal mostrar tamanhoModal" id="janelaProduto">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5>Escolha um Produto</h5>
+                            </div>
+                            <div className="modal-body scroll">
+                                <TProdutoCaixa produtos={this.props.lista}/>
+                            </div>
+                            <div className="modal-footer">
+                                <button onClick={fecharCompReact} className="btn btn-secondary">Sair</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="modal-backdrop"></div>
+            </div>
+        )
+    }
+}
+
+class TProdutoCaixa extends React.Component{
+    render(){
+        let lista =this.props.produtos.map((item)=>{
+            return(
+                <TLinhaCaixa key={item.id} id={item.id} nome={item.nome} vlVen={item.valor_venda}/>
+            );
+        });
+
+        return(
+            <table className="table table-hover">
+                <THeadCaixa/>
+                <tbody>
+                {lista}
+                </tbody>
+            </table>
+        );
+    }
+}
+
+class TLinhaCaixa extends React.Component{
+    render(){
+        return(
+            <tr>
+                <td>{this.props.id}</td>
+                <td>{this.props.nome}</td>
+                <td>{this.props.vlVen}</td>
+                <td> <BotaoSelecionar id={this.props.id}  tipo="produtoCaixa"/></td>
+            </tr>
+        );
+    }
+}
+
+class THeadCaixa extends React.Component {
+    render() {
+        return (
+            <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Vl. Venda</th>
+                <th scope="col">Opção</th>
+            </tr>
+            </thead>
+        );
+    }
+}
+
+function listaProdutosCaixa(lista) {
+    let elLista = (
+      <ListaProdutoCaixa lista={lista}/>
+    );
+
+    ReactDOM.render(
+        elLista,
+        document.getElementById("compReact")
+    )
+}
+
+//Lista caixa cupom
+
+class TabelaProdutoCaixa extends React.Component{
+    render(){
+        let lista = this.props.listaP.map((item)=>{
+            return(
+                <LinhaProdutoCaixa
+                    key={item.id}
+                    nome={item.nome}
+                    quant={item.quantidade}
+                    desc={item.desconto}
+                    vlLiquido={item.vlLiquido}
+                    vlTotal={item.vlTotal}
+                />
+            );
+        });
+
+        return (
+            <table className="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Quantidade</th>
+                    <th scope="col">Vl.Unitario</th>
+                    <th scope="col">Desconto</th>
+                    <th scope="col">Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                {lista}
+                </tbody>
+            </table>
+        );
+    }
+}
+
+class LinhaProdutoCaixa extends React.Component{
+    render(){
+        return(
+            <tr>
+                <td>{this.props.nome}</td>
+                <td>{this.props.quant}</td>
+                <td>{this.props.vlLiquido}</td>
+                <td>{this.props.desc}</td>
+                <td>{this.props.vlTotal}</td>
+            </tr>
+        );
+    }
+}
+
+function atualizarListaCaixa(lista) {
+    let elLista = (
+        <TabelaProdutoCaixa listaP={lista}/>
+    );
+
+    ReactDOM.render(
+        elLista,
+        document.getElementById("componentR")
+    )
+}
+
+class ModalAbreCaixa extends React.Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            vlAbre: 0
+        }
+
+        this.valorTrocou = this.valorTrocou.bind(this);
+        this.abrirCaixa = this.abrirCaixa.bind(this);
+    }
+
+    valorTrocou(e){
+        let novoValor = e.target.value.replace(".", "").replace(",", ".");
+        this.setState({vlAbre:novoValor});
+    }
+
+    abrirCaixa(){
+        abrirCaixaUser(this.state.vlAbre);
+        fecharCompReact();
+    }
+
+    render(){
+        return(
+            <div>
+                <div className="modal mostrar" id="janelaProduto">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5>Abrir Caixa</h5>
+                            </div>
+                            <div className="modal-body">
+                                <div className="form-group">
+                                    <label className="col-form-label" htmlFor="vlAbre">Valor Abertura</label>
+                                    <input type="text" className="form-control valor" id="vlAbre" onKeyUp={this.valorTrocou} maxLength="8"/>
+                                </div>
+                            </div>
+                            <div className="modal-footer">
+                                <button onClick={this.abrirCaixa} className="btn btn-success">Confirmar</button>
+                                <button onClick={fecharCompReact} className="btn btn-secondary">Sair</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="modal-backdrop"></div>
+            </div>
+        )
+    }
+}
+
+function abreCaixa() {
+    let elAbreCaixa = (
+        <ModalAbreCaixa/>
+    );
+
+    ReactDOM.render(
+        elAbreCaixa,
+        document.getElementById("compReact")
+    )
+}
+
+function removerComponentesCaixa() {
+    ReactDOM.unmountComponentAtNode(document.getElementById("footer"));
+    limparFooterRodapeCaixa();
+    $('#selectCaixa')[0].value = "";
+}
+
+function preencheFooterCaixa(caixa) {
+    let elFooterCaixa=(
+      <p id="pFooterCaixa">CAIXA ABERTO - Nº Caixa: {caixa.id} - Usuario: {caixa.nome}</p>
+    );
+
+    ReactDOM.render(
+        elFooterCaixa,
+        document.getElementById("footer")
+    )
+}
+
+class ModalFinalizaVenda extends React.Component{
+    constructor(props){
+        super(props);
+        this.state ={
+            total: this.props.subtotal
+        }
+        this.ajuste = this.ajuste.bind(this);
+    }
+
+    ajuste(nr, casas) {
+        const og = Math.pow(10, casas)
+        return Math.floor(nr * og) / og;
+    }
+
+    render(){
+        let total = parseFloat(this.props.subtotal);
+        return(
+            <div>
+                <div className="modal mostrar" id="janelaProduto">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5>Finalizar Venda</h5>
+                            </div>
+                            <div id="pesquisaReact"></div>
+                            <form action="DAO/finalizarVenda.php" method="POST">
+                                <div className="modal-body">
+                                    <div className="form-group">
+                                        <label className="col-form-label" htmlFor="cliente">Cliente</label>
+                                        <div className="form-group">
+                                            <div className="input-group mb-3">
+                                                <input type="text" className="form-control" id="cliente"
+                                                       name="cliente"/>
+                                                    <div className="input-group-append">
+                                                        <span className="input-group-text button"
+                                                              onClick={()=>{pesquisaCliente(0);}}><img src="resourse/imagens/lupa.png" alt="lupa" title="Pesquisar" />
+                                                        </span>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span>Forma de Pagamento</span>
+                                    <div className="form-group especieLinha">
+                                        <div className="custom-control custom-radio especieItem">
+                                            <input type="radio" id="dinheiro" name="especie"
+                                                   className="custom-control-input"/>
+                                                <label className="custom-control-label" htmlFor="dinheiro">Dinheiro</label>
+                                        </div>
+                                        <div className="custom-control custom-radio especieItem">
+                                            <input type="radio" id="cartao" name="especie"
+                                                   className="custom-control-input"/>
+                                                <label className="custom-control-label" htmlFor="cartao">Cartão</label>
+                                        </div>
+                                        <div className="custom-control custom-radio especieItem">
+                                            <input type="radio" id="crediario" name="especie"
+                                                   className="custom-control-input" />
+                                                <label className="custom-control-label" htmlFor="crediario">Crediário</label>
+                                        </div>
+                                    </div>
+                                    <div className="form-group camposCaixa">
+                                        <label className="col-form-label col-form-label-lg"
+                                               htmlFor="subtotal">Subtotal</label>
+                                        <input className="form-control form-control-lg" type="text"
+                                               id="subtotal" name="subtotal" readOnly value={this.ajuste(total, 2)}/>
+                                </div>
+                                </div>
+                                <div className="modal-footer">
+                                    <button onClick={this.abrirCaixa} className="btn btn-success">Confirmar</button>
+                                    <button onClick={fecharCompReact} className="btn btn-secondary">Sair</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div className="modal-backdrop"></div>
+            </div>
+        );
+    }
+}
+
+function abrirModalFinalizarVenda(lista, tipo, total) {
+    let elModalFinalizaVenda = (
+        <ModalFinalizaVenda lista={lista} tipo={tipo} subtotal={total}/>
+    );
+    if (listaPCaixa.length >0){
+        ReactDOM.render(
+            elModalFinalizaVenda,
+            document.getElementById("compReact")
+        )
+    }
+}
+
+class TableCliente extends React.Component{
+    render(){
+        let lista =this.props.clientes.map((item)=>{
+            return(
+                <TableLinha key={item.id} id={item.id} nome={item.nome} tipo="cliente"/>
+            );
+        });
+
+        return(
+            <table className="table table-hover">
+                <TableHead/>
+                <tbody>
+                {lista}
+                </tbody>
+            </table>
+        );
+    }
+}
+
+class ModalClientes extends React.Component{
+    render(){
+        return(
+            <div>
+                <div className="modal mostrar tamanhoModal" id="janelaFornecedor">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5>Escolha um Cliente</h5>
+                            </div>
+                            <div className="modal-body scroll">
+                                <TableCliente clientes={this.props.clientes}/>
+                            </div>
+                            <div className="modal-footer">
+                                <button onClick={fecharPesquisaReact} className="btn btn-secondary">Sair</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="modal-backdrop"></div>
+            </div>
+        );
+    }
+}
+
+function exibirListaClientes(lista) {
+    let elemento = (
+        <ModalClientes clientes={lista}/>
+    );
+
+    ReactDOM.render(
+        elemento,
+        document.getElementById("pesquisaReact")
+    );
+}
+
+function fecharPesquisaReact() {
+    ReactDOM.unmountComponentAtNode(document.getElementById("pesquisaReact"));
+}
+
 function setProdutoAjuste(id) {
     fecharCompReact();
     ajustePreco(id);
@@ -485,4 +884,13 @@ function setProdutoConvert(id, local) {
 function setProdutoEntrada(id) {
     fecharCompReact();
     entradaProduto(id);
+}
+function setProdutoCaixa(id) {
+    fecharCompReact();
+    pesquisaProdutoCaixa(id);
+}
+
+function setClienteVenda(id) {
+    fecharPesquisaReact();
+    pesquisaCliente(id);
 }

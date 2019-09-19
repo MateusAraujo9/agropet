@@ -1,6 +1,9 @@
 var pagina;
 const listaProdutos = [];
-const produtoC = {};
+var produtoC = {};
+const listaPCaixa =[];
+var subtotalCaixa = 0;
+var statusCaixa = false;
 
 function subMenu(sub) {
     let subMenu = document.getElementById(sub);
@@ -34,7 +37,7 @@ app.config(function ($routeProvider) {
         .when("/ajustePreco", {templateUrl: "ajustePrecoProduto.html"})
         .when("/convertEstoque", {templateUrl: "conversaoDeEstoque.html"})
         .when("/entradaEstoque", {templateUrl: "entradaEstoque.html"})
-        .when("/caixa", {templateUrl: "caixa.html"})
+        .when("/caixa", {templateUrl: "caixa.php"})
 });
 
 app.controller("meuAppCtrl", function ($scope, $http) {
@@ -336,18 +339,124 @@ function pesquisaProdutoCaixa(pesquisa){
             $('#produto')[0].value = retorno[0].nome;
             produtoC.id = retorno[0].id;
             produtoC.nome = retorno[0].nome;
-            produtoC.vlBruto = retorno[0].valor_venda;
+            produtoC.vlBruto = parseFloat(retorno[0].valor_venda);
             produtoC.vlLiquido = retorno[0].valor_venda;
 
             $('#vlUnit')[0].value = retorno[0].valor_venda;
 
 
            $('#quantidade').focus();
+           fecharCompReact();
        } else if (retorno.length > 1) {
-
+            listaProdutosCaixa(retorno);
 
        }
     });
+}
+
+function apagarCamposCaixa(){
+    $('#produto')[0].value = "";
+    $('#quantidade')[0].value = "";
+    $('#vlUnit')[0].value = "";
+    $('#desconto')[0].value = "";
+}
+
+function acoesCaixa(opcao){
+    if(opcao.value == 1){
+        abreCaixa();
+    }else if(opcao.value == 2){
+       if (listaPCaixa.length > 0){
+           alert("Não pode fechar o caixa com venda em andamento!")
+       } else{
+           fechaCaixa();
+       }
+    }
+}
+
+function abrirCaixaUser(valor){
+    $.get("DAO/abreCaixa.php", "valor="+valor, function (data) {
+        let retorno = data;
+
+        if (retorno === "erro") {
+            alert("Não foi possivel abrir caixa");
+        }else if (retorno === "Caixa Aberto") {
+            alert("O caixa já está aberto");
+        }else{
+            retorno = JSON.parse(data);
+            console.log(retorno);
+            preencheFooterCaixa(retorno);
+        }
+    });
+
+    $('#selectCaixa')[0].value = 0;
+}
+
+function consultaCaixaAberto(){
+    $.ajax({
+        url: "DAO/consultaCaixaAberto.php",
+        async:false
+    }).done(function (data) {
+       if (data === "true"){
+           statusCaixa = true;
+       }else{
+           statusCaixa = false;
+       }
+
+    })
+}
+
+function fechaCaixa(){
+    $.ajax({
+        url: "DAO/fecharCaixa.php",
+        async:false
+    }).done(function (data) {
+        if (data === "true"){
+            removerComponentesCaixa();
+        }else{
+            alert("Caixa já está Fechado!");
+        }
+
+    })
+}
+
+function limparFooterRodapeCaixa(){
+    let node = document.getElementById("pFooterCaixa");
+    if (node !== null){
+        if (node.parentNode){
+            node.parentNode.removeChild(node);
+        }
+    }
+}
+
+function finalizarVenda(tipo){
+    if (tipo === "V"){
+
+    }
+}
+
+function pesquisaCliente(id){
+    let pCli = document.getElementById("cliente");
+    let pesquisa = 0;
+
+    if (id === 0) {
+        pesquisa=pCli.value;
+    }else{
+        pesquisa=id;
+    }
+    $.get("DAO/consultaCliente.php", "pesquisa="+pesquisa, function (data) {
+        let retorno = JSON.parse(data);
+
+        if(retorno.length===0){
+            exibirAlerta(retorno.length, "Cliente");
+        }else if(retorno.length===1){
+            let cliente = document.getElementById("cliente");
+
+            cliente.value = retorno[0].nome;
+        }else if (retorno.length > 1) {
+            exibirListaClientes(retorno);
+        }
+    })
+
 }
 
 //Mascaras jquery

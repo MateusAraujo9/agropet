@@ -164,11 +164,6 @@
     flex-direction: column;
     padding: 10px;
 }
-
-
-.inputCaixaQtd{
-
-}
 .linhaCaixa{
     display: flex;
     flex-direction: row;
@@ -180,4 +175,46 @@
 }
 .botaoCaixa{
     margin-top: 15px;
+}
+.titleCaixa{
+    margin-top: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.opcoesCaixa{
+    margin-left: 10px;
+    margin-top: 5px;
+    width: 150px;
+}
+.footer{
+    height: 40px;
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.footer p{
+    font-family: Arial, SansSerif;
+}
+.telaCaixa{
+    display: flex;
+    flex-direction: column;
+}
+.especieLinha{
+    display: flex;
+    flex-direction: row;
+}
+.especieItem{
+    margin: 10px;
+}
+.scroll{
+    overflow: auto;
+    max-height: 400px;
+}
+.tamanhoModal{
+    max-height: 700px;
 }
