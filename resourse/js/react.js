@@ -745,7 +745,7 @@ class ModalFinalizaVenda extends React.Component{
                                 <h5>Finalizar Venda</h5>
                             </div>
                             <div id="pesquisaReact"></div>
-                            <form action="DAO/finalizarVenda.php" method="POST">
+                            <div>
                                 <div className="modal-body">
                                     <div className="form-group">
                                         <label className="col-form-label" htmlFor="cliente">Cliente</label>
@@ -765,17 +765,17 @@ class ModalFinalizaVenda extends React.Component{
                                     <div className="form-group especieLinha">
                                         <div className="custom-control custom-radio especieItem">
                                             <input type="radio" id="dinheiro" name="especie"
-                                                   className="custom-control-input"/>
+                                                   className="custom-control-input" value="dinheiro"/>
                                                 <label className="custom-control-label" htmlFor="dinheiro">Dinheiro</label>
                                         </div>
                                         <div className="custom-control custom-radio especieItem">
                                             <input type="radio" id="cartao" name="especie"
-                                                   className="custom-control-input"/>
+                                                   className="custom-control-input" value="cartao"/>
                                                 <label className="custom-control-label" htmlFor="cartao">Cartão</label>
                                         </div>
                                         <div className="custom-control custom-radio especieItem">
                                             <input type="radio" id="crediario" name="especie"
-                                                   className="custom-control-input" />
+                                                   className="custom-control-input" value="crediario"/>
                                                 <label className="custom-control-label" htmlFor="crediario">Crediário</label>
                                         </div>
                                     </div>
@@ -787,10 +787,10 @@ class ModalFinalizaVenda extends React.Component{
                                 </div>
                                 </div>
                                 <div className="modal-footer">
-                                    <button onClick={this.abrirCaixa} className="btn btn-success">Confirmar</button>
+                                    <button onClick={finalizarVenda} className="btn btn-success">Confirmar</button>
                                     <button onClick={fecharCompReact} className="btn btn-secondary">Sair</button>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -870,6 +870,42 @@ function exibirListaClientes(lista) {
 function fecharPesquisaReact() {
     ReactDOM.unmountComponentAtNode(document.getElementById("pesquisaReact"));
 }
+
+class AlertModal extends React.Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            x: 1
+        }
+    }
+
+    render(){
+        let elBtn = (
+            <button className="close" onClick={fecharPesquisaReact} aria-label="Fechar">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        );
+        return(
+            <div className="alert alert-warning fade show" role="alert">
+                <p className="msgAlert">{this.props.msg}
+                    {elBtn}
+                </p>
+            </div>
+        );
+    }
+}
+
+function exibirAlertaModal(tipo, mensagem) {
+    let elemento = (
+        <AlertModal tipo={tipo} msg={mensagem}/>
+    );
+
+    ReactDOM.render(
+        elemento,
+        document.getElementById("pesquisaReact")
+    )
+}
+
 
 function setProdutoAjuste(id) {
     fecharCompReact();

@@ -428,10 +428,25 @@ function limparFooterRodapeCaixa(){
     }
 }
 
-function finalizarVenda(tipo){
-    if (tipo === "V"){
+function finalizarVenda(tipoVenda){
+    let elCli = document.getElementById("cliente").value;
+    let especValue = $("input[name='especie']:checked").val();
+    let listaProdutosVenda = listaPCaixa;
+    let totalVenda = subtotalCaixa;
 
+    if ((elCli === "" || elCli === null) && especValue === "crediario"){
+        exibirAlertaModal("Cliente", "Para venda em crediário é necessário selecionar cliente");
+        return false;
+    }else if (especValue === undefined){
+        exibirAlertaModal("Especie", "Para continuar selecione uma especie");
+        return false;
+    }else{
+        $.post("DAO/finalizarVenda.php", {tipo:"V", cliente:elCli, subtotal:totalVenda,
+            especie:especValue, lista:listaProdutosVenda}, function (data) {
+            alert(data);
+        })
     }
+
 }
 
 function pesquisaCliente(id){
