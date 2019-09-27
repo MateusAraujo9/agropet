@@ -358,7 +358,6 @@ class AjusteProduto extends React.Component{
 
     trocarvlVen(e){
         let novoValor = e.target.value;
-
         this.setState({vlVen:novoValor});
     }
 
@@ -703,6 +702,10 @@ function abreCaixa() {
     )
 }
 
+function removerComponentR() {
+    ReactDOM.unmountComponentAtNode(document.getElementById("componentR"));
+}
+
 function removerComponentesCaixa() {
     ReactDOM.unmountComponentAtNode(document.getElementById("footer"));
     limparFooterRodapeCaixa();
@@ -724,14 +727,22 @@ class ModalFinalizaVenda extends React.Component{
     constructor(props){
         super(props);
         this.state ={
-            total: this.props.subtotal
+            total: this.props.subtotal,
+            troco: 0
         }
         this.ajuste = this.ajuste.bind(this);
+        this.troco = this.troco.bind(this);
     }
 
     ajuste(nr, casas) {
         const og = Math.pow(10, casas)
         return Math.floor(nr * og) / og;
+    }
+
+    troco(e){
+        let novoValor = e.target.value.replace(".", "").replace(",", ".");
+        novoValor = this.ajuste((novoValor - this.ajuste(this.props.subtotal, 2)), 2);
+        this.setState({troco:novoValor});
     }
 
     render(){
@@ -784,10 +795,20 @@ class ModalFinalizaVenda extends React.Component{
                                                htmlFor="subtotal">Subtotal</label>
                                         <input className="form-control form-control-lg" type="text"
                                                id="subtotal" name="subtotal" readOnly value={this.ajuste(total, 2)}/>
-                                </div>
+                                    </div>
+                                    <div className="especieLinha">
+                                        <div className="form-group">
+                                            <label htmlFor="vlPago" className="col-form-label">Dinheiro</label>
+                                            <input type="text" className="form-control valor" id="vlPago" onKeyUp={this.troco}/>
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="troco" className="col-form-label">Troco</label>
+                                            <input type="text" className="form-control valor" id="troco" readOnly value={this.state.troco}/>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div className="modal-footer">
-                                    <button onClick={finalizarVenda} className="btn btn-success">Confirmar</button>
+                                    <button onClick={()=>{finalizarVenda("V")}} className="btn btn-success">Confirmar</button>
                                     <button onClick={fecharCompReact} className="btn btn-secondary">Sair</button>
                                 </div>
                             </div>
@@ -906,6 +927,169 @@ function exibirAlertaModal(tipo, mensagem) {
     )
 }
 
+class ModalCrediario extends React.Component{
+    render(){
+        return(
+            <div>
+                <div className="modal mostrar tamanhoModal" id="janelaFornecedor">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5>Recebimento</h5>
+                            </div>
+                            <div className="modal-body scroll">
+                                <div className="form-group">
+                                    <label htmlFor="cliente" className="col-form-label">Cliente</label>
+                                    <input type="text" className="form-control" id="cliente" readOnly value={this.props.lista[0].nome}/>
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="vlComprado" className="col-form-label">Valor a Pagar</label>
+                                    <input type="text" className="form-control" id="vlComprado" readOnly value={this.props.lista[0].valor_comprado}/>
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="valorPago" className="col-form-label">Valor Pago</label>
+                                    <input type="text" className="form-control valor" id="valorPago" maxLength="10"/>
+                                </div>
+                                <span>Forma de Pagamento</span>
+                                <div className="form-group especieLinha">
+                                    <div className="custom-control custom-radio especieItem">
+                                        <input type="radio" id="dinheiro" name="especie"
+                                               className="custom-control-input" value="dinheiro"/>
+                                        <label className="custom-control-label" htmlFor="dinheiro">Dinheiro</label>
+                                    </div>
+                                    <div className="custom-control custom-radio especieItem">
+                                        <input type="radio" id="debito" name="especie"
+                                               className="custom-control-input" value="debito"/>
+                                        <label className="custom-control-label" htmlFor="debito">Débito</label>
+                                    </div>
+                                    <div className="custom-control custom-radio especieItem">
+                                        <input type="radio" id="credito" name="especie"
+                                               className="custom-control-input" value="credito"/>
+                                        <label className="custom-control-label" htmlFor="credito">Crédito</label>
+                                    </div>
+                                    <div className="custom-control custom-radio especieItem">
+                                        <input type="radio" id="crediario" name="especie"
+                                               className="custom-control-input" value="crediario"/>
+                                        <label className="custom-control-label" htmlFor="crediario">Crediário</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="modal-footer">
+                                <button onClick={()=>{baixarCrediario(this.props.lista[0].id, this.props.lista[0].valor_comprado )}} className="btn btn-success">Receber</button>
+                                <button onClick={fecharCompReact} className="btn btn-secondary">Sair</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="modal-backdrop"></div>
+            </div>
+        );
+    }
+}
+
+function exibirModalCrediario(lista) {
+    let elemento = (
+        <ModalCrediario lista={lista}/>
+    )
+
+    ReactDOM.render(
+        elemento,
+        document.getElementById("compReact")
+    )
+}
+
+class LinhaGen extends React.Component{
+    render(){
+        let lista;
+        if (this.props.tipo === "clientePorItem") {
+            lista = (
+                <tr>
+                    <td>{this.props.item['dtVenda']}</td>
+                    <td>{this.props.item['nVenda']}</td>
+                    <td>{this.props.item['produto']}</td>
+                    <td>{this.props.item['quantidade']}</td>
+                    <td>{this.props.item['vlLiquido']}</td>
+                    <td>{this.props.item['vlBruto']}</td>
+                    <td>{this.props.item['desconto']}</td>
+                    <td>{this.props.item['vlTotal']}</td>
+                </tr>
+            )
+        }
+        return lista;
+    }
+}
+
+class TbBody extends React.Component{
+    render(){
+        let cont = 0;
+        let lista = this.props.body.map((item)=>{
+            cont++;
+            return(
+                <LinhaGen
+                    key={cont}
+                    item={item}
+                    tipo={this.props.tipo}
+                />
+            );
+        });
+
+        return(
+            <tbody>
+            {lista}
+            </tbody>
+        );
+    }
+}
+
+class TbHeader extends React.Component{
+    render(){
+        let lista;
+        if (this.props.tipo === "clientePorItem"){
+            lista = (
+                <tr>
+                    <th scope="col">Data</th>
+                    <th scope="col">Nº Venda</th>
+                    <th scope="col">Produto</th>
+                    <th scope="col">quantidade</th>
+                    <th scope="col">Vl Liquido</th>
+                    <th scope="col">Vl Bruto</th>
+                    <th scope="col">Desconto</th>
+                    <th scope="col">Vl Total</th>
+                </tr>
+            )
+        }
+        return(
+            <thead>
+                {lista}
+            </thead>
+        )
+    }
+}
+
+class TabelaGen extends React.Component{
+    render(){
+        return(
+            <table className="table table-hover" id="tabela">
+                <TbHeader tipo={this.props.tipo}/>
+                <TbBody body={this.props.body} tipo={this.props.tipo}/>
+            </table>
+        )
+    }
+}
+
+function exibirRelatorioGen(tipo, body) {
+    let elemento = (
+        <div>
+            <h3 className="titulo" id="titulo">Relatório de Vendas</h3>
+            <TabelaGen tipo={tipo} body={body}/>
+        </div>
+    );
+
+    ReactDOM.render(
+        elemento,
+        document.getElementById("compReact")
+    )
+}
 
 function setProdutoAjuste(id) {
     fecharCompReact();

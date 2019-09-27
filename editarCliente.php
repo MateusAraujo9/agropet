@@ -68,6 +68,22 @@ if (!empty($idClientePost)){
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="/resourse/css/style.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://igorescobar.github.io/jQuery-Mask-Plugin/js/jquery.mask.min.js"></script>
+
+    <!--React-->
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <!--Angular-->
+    <script src="resourse/js/angular.js"></script>
+    <script src="resourse/js/angular-route.js"></script>
+
+    <!--Meus links-->
+    <link rel="stylesheet" href="resourse/css/style.css">
+    <script src="resourse/js/script.js"></script>
+    <script type="text/babel" src="resourse/js/react.js"></script>
 </head>
 <h3 class="titulo">Editar Cliente</h3>
 
@@ -88,7 +104,7 @@ if (!empty($idClientePost)){
             <div class="form-group row">
                 <fieldset class="col-md-3">
                     <label class="col-form-label" for="cpfCliente">CPF</label>
-                    <input type="text" class="form-control" id="cpfCliente" name="cpfCliente" value="<?php echo $cliente['cpf']?>">
+                    <input type="text" class="form-control cpf" id="cpfCliente" name="cpfCliente" value="<?php echo $cliente['cpf']?>">
                 </fieldset>
                 <fieldset class="col-md-3">
                     <label class="col-form-label" for="nascCliente">Data Nascimento</label>
@@ -116,7 +132,7 @@ if (!empty($idClientePost)){
                 </fieldset>
                 <fieldset class="col-md-3">
                     <label class="col-form-label" for="numeroCliente">Numero</label>
-                    <input type="text" class="form-control" id="numeroCliente" name="numeroCliente" value="<?php echo $cliente['numero']?>">
+                    <input type="text" class="form-control numero" id="numeroCliente" name="numeroCliente" value="<?php echo $cliente['numero']?>">
                 </fieldset>
                 <fieldset class="col-md-6">
                     <label class="col-form-label" for="telefoneCliente">Telefone</label>
@@ -130,7 +146,7 @@ if (!empty($idClientePost)){
                 </fieldset>
                 <fieldset class="col-md-5">
                     <label class="col-form-label" for="cepCliente">CEP</label>
-                    <input type="text" class="form-control" id="cepCliente" name="cepCliente" value="<?php echo $cliente['cep']?>">
+                    <input type="text" class="form-control cep" id="cepCliente" name="cepCliente" value="<?php echo $cliente['cep']?>">
                 </fieldset>
             </div>
             <input type="submit" value="Editar Cadastro" class="btn btn-primary btn-lg btn-block btnCadastro">

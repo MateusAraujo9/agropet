@@ -3,6 +3,18 @@ require "DAO/conection.php";
 
 $tkuser = isset($_COOKIE['tkuser'])?$_COOKIE['tkuser']:"";
 
+$sqlQuantCli = "SELECT count(*) as qtd FROM cliente";
+
+try{
+    $sqlQuantCli = $pdo->query($sqlQuantCli);
+
+    $sqlQuantCli = $sqlQuantCli->fetch();
+}catch (PDOException $e){
+    echo $e->getMessage();
+}
+if ($sqlQuantCli['qtd'] > 0){
+
+
 /*
  * Código para pegar página no banco de dados, baita gambi
  * */
@@ -56,6 +68,7 @@ $numPaginas = intval($vlDividido);
 if ($numPaginas < ($vlDividido)){
     $numPaginas++;
 }
+}
 ?>
     <head>
         <!--Bootstrap-->
@@ -64,6 +77,7 @@ if ($numPaginas < ($vlDividido)){
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="/resourse/css/style.css">
     </head>
+    <div id="compReact"></div>
     <h3 class="titulo">Cadastro de Clientes</h3>
     <a href="#!cadCliente" type="button" class="btn btn-outline-primary">Cadastrar</a>
     <table class="table table-hover">
@@ -79,43 +93,48 @@ if ($numPaginas < ($vlDividido)){
     </thead>
     <tbody>
 <?php
-foreach ($clientes as $cl){
-    echo "<tr onclick='ativaTable(this)'>";
-    echo "    <td>".$cl['id']."</td>";
-    echo "    <td>".$cl['nome']."</td>";
-    echo "    <td>".$cl['cpf']."</td>";
-    echo "    <td>".$cl['telefone']."</td>";
-    echo "    <td>".$cl['email']."</td>";
-    echo "    <td><img src=\"resourse/imagens/editar.png\" alt=\"editarUsuario\" title=\"Editar\" class=\"btnListUser\" onclick=\"window.location='editarCliente.php?cliente=".$cl['id']."'\"></td>";
-    echo "</tr>";
-}
-echo "</tbody>";
-echo "</table>";
+if ($sqlQuantCli['qtd'] > 0){
+    foreach ($clientes as $cl){
+        echo "<tr onclick='ativaTable(this)'>";
+        echo "    <td>".$cl['id']."</td>";
+        echo "    <td>".$cl['nome']."</td>";
+        echo "    <td>".$cl['cpf']."</td>";
+        echo "    <td>".$cl['telefone']."</td>";
+        echo "    <td>".$cl['email']."</td>";
+        echo "    <td>";
+        echo "      <img src=\"resourse/imagens/editar.png\" alt=\"editarUsuario\" title=\"Editar\" class=\"btnListUser\" onclick=\"window.location='editarCliente.php?cliente=".$cl['id']."'\">";
+        echo "      <img src=\"resourse/imagens/cifrao.png\" alt=\"receberCrediario\" title=\"Receber Crediario\" class=\"btnListUser\" onclick=\"receberCrediario('".$cl['id']."')\"";
+        echo "    </td>";
+        echo "</tr>";
+    }
+    echo "</tbody>";
+    echo "</table>";
 
 
-echo "<div class='testando'>";
-echo "    <ul class='pagination'>";
-echo "        <li class='page-item'>";
-echo "            <a class='page-link' href='/#!/listCliente' ng-click='trocaPaginaCliente(1)'>&laquo;</a>";
-echo "        </li>";
-if (($pag-1)> 0){
+    echo "<div class='testando'>";
+    echo "    <ul class='pagination'>";
     echo "        <li class='page-item'>";
-    echo "            <a class='page-link' href='/#!/listCliente' ng-click='trocaPaginaCliente(".($pag-1).")'>".($pag-1)."</a>";
+    echo "            <a class='page-link' href='/#!/listCliente' ng-click='trocaPaginaCliente(1)'>&laquo;</a>";
     echo "        </li>";
-}
-echo "        <li class='page-item active'>";
-echo "            <a class='page-link' href='/#!/listCliente' ng-click='trocaPaginaCliente(".$pag.")'>$pag</a>";
-echo "        </li>";
-if (($pag+1)<=$numPaginas){
+    if (($pag-1)> 0){
+        echo "        <li class='page-item'>";
+        echo "            <a class='page-link' href='/#!/listCliente' ng-click='trocaPaginaCliente(".($pag-1).")'>".($pag-1)."</a>";
+        echo "        </li>";
+    }
+    echo "        <li class='page-item active'>";
+    echo "            <a class='page-link' href='/#!/listCliente' ng-click='trocaPaginaCliente(".$pag.")'>$pag</a>";
+    echo "        </li>";
+    if (($pag+1)<=$numPaginas){
+        echo "        <li class='page-item'>";
+        echo "            <a class='page-link' href='/#!/listCliente' ng-click='trocaPaginaCliente(".($pag+1).")'>".($pag+1)."</a>";
+        echo "        </li>";
+    }
     echo "        <li class='page-item'>";
-    echo "            <a class='page-link' href='/#!/listCliente' ng-click='trocaPaginaCliente(".($pag+1).")'>".($pag+1)."</a>";
+    echo "            <a class='page-link' href='/#!/listCliente' ng-click='trocaPaginaCliente(".$numPaginas.")'>&raquo;</a>";
     echo "        </li>";
+    echo "    </ul>";
+    echo "</div>";
 }
-echo "        <li class='page-item'>";
-echo "            <a class='page-link' href='/#!/listCliente' ng-click='trocaPaginaCliente(".$numPaginas.")'>&raquo;</a>";
-echo "        </li>";
-echo "    </ul>";
-echo "</div>";
 
 
 ?>

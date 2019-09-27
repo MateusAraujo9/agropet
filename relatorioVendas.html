@@ -1,0 +1,43 @@
+<div class="containerInt">
+    <div id="compReact"></div>
+    <div class="containerCenter">
+        <div id="pesquisaReact"></div>
+        <h3 class="titulo" id="titulo">Filtro Relatório de Vendas</h3>
+        <div id="filtro">
+            <div class="form-group row">
+                <div class="col-md-4">
+                    <label for="dtIni" class="col-form-label">Data Inicial*</label>
+                    <input type="date" class="form-control" name="dtIni" id="dtIni">
+                </div>
+                <div class="col-md-4">
+                    <label for="dtFim" class="col-form-label">Data Final*</label>
+                    <input type="date" class="form-control" name="dtFim" id="dtFim">
+                </div>
+                <div class="col-md-3 custom-checkbox checkRelatorio">
+                    <div class="colunas">
+                        <input type="checkbox" class="custom-control-input" name="porItem" id="porItem">
+                        <label for="porItem" class="custom-control-label">Por Item</label>
+                    </div>
+                    <div class="colunas">
+                        <input type="checkbox" class="custom-control-input" name="soCliente" id="soCliente">
+                        <label for="soCliente" class="custom-control-label">Só clientes</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-form-label" for="cliente">Cliente</label>
+                <div class="form-group">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="cliente" name="cliente"/>
+                        <div class="input-group-append">
+                            <span class="input-group-text button" onclick="pesquisaCliente(0)">
+                                <img src="resourse/imagens/lupa.png" alt="lupa" title="Pesquisar" />
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button value="Consultar" onclick="consultarVendas()" class="btn btn-primary btn-lg btn-block">Consultar</button>
+        </div>
+    </div>
+</div>

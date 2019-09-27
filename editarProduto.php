@@ -131,6 +131,8 @@ if (!empty($idProdutoPost)){
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="/resourse/css/style.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://igorescobar.github.io/jQuery-Mask-Plugin/js/jquery.mask.min.js"></script>
 
     <!--React-->
     <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
@@ -172,7 +174,7 @@ if (!empty($idProdutoPost)){
                 </fieldset>
                 <fieldset class="col-md-3">
                     <label class="col-form-label" for="qtd">Quantidade</label>
-                    <input type="text" class="form-control" id="qtd" name="qtd" value="<?php echo $produto['quantidade']?>">
+                    <input type="text" class="form-control quantidadeDec" id="qtd" name="qtd" maxlength="11" value="<?php echo $produto['quantidade']?>">
                 </fieldset>
                 <div class="col-md-2">
                     <label class="col-form-label" for="unidade">Unidade</label>
@@ -255,14 +257,14 @@ if (!empty($idProdutoPost)){
                     <label class="col-form-label" for="vlComp">Valor de Compra</label>
                     <div class="input-group-prepend">
                         <span class="input-group-text">R$</span>
-                        <input type="text" class="form-control" id="vlComp" name="vlComp" value="<?php echo $produto['valor_compra']?>">
+                        <input type="text" class="form-control valor" id="vlComp" name="vlComp" maxlength="9" value="<?php echo $produto['valor_compra']?>">
                     </div>
                 </div>
                 <div class="col-md-4">
                     <label class="col-form-label" for="vlVen">Valor de Venda</label>
                     <div class="input-group-prepend">
                         <span class="input-group-text">R$</span>
-                        <input type="text" class="form-control" id="vlVen" name="vlVen" value="<?php echo $produto['valor_venda']?>">
+                        <input type="text" class="form-control valor" id="vlVen" name="vlVen" maxlength="9" value="<?php echo $produto['valor_venda']?>">
                     </div>
 
                 </div>

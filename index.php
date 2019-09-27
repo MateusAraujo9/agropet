@@ -67,10 +67,14 @@ if ($logado == 'false' || empty($logado)){
                 </ul>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#!caixa">Caixa</a>
+                <a class="nav-link" href="caixa.php">Caixa</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" onmouseenter="subMenu('dropRelatorio')" onmouseleave="subMenu('dropRelatorio')">
                 <a class="nav-link" href="#">Relatórios</a>
+                <ul id="dropRelatorio" class="esconde">
+                    <a href="#!rVendas" class="linkMenu"><li class="itemDrop">Vendas</li></a>
+                    <a href="#" class="linkMenu"><li class="itemDrop">Crediário</li></a>
+                </ul>
             </li>
         </ul>
         <?php

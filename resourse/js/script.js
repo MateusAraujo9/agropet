@@ -1,7 +1,7 @@
 var pagina;
 const listaProdutos = [];
 var produtoC = {};
-const listaPCaixa =[];
+var listaPCaixa =[];
 var subtotalCaixa = 0;
 var statusCaixa = false;
 
@@ -37,7 +37,7 @@ app.config(function ($routeProvider) {
         .when("/ajustePreco", {templateUrl: "ajustePrecoProduto.html"})
         .when("/convertEstoque", {templateUrl: "conversaoDeEstoque.html"})
         .when("/entradaEstoque", {templateUrl: "entradaEstoque.html"})
-        .when("/caixa", {templateUrl: "caixa.php"})
+        .when("/rVendas", {templateUrl: "relatorioVendas.html"})
 });
 
 app.controller("meuAppCtrl", function ($scope, $http) {
@@ -369,7 +369,10 @@ function acoesCaixa(opcao){
            alert("Não pode fechar o caixa com venda em andamento!")
        } else{
            fechaCaixa();
+           $('#selectCaixa')[0].value = "";
        }
+    }else if(opcao.value = 3){
+        finalizarVenda("C");
     }
 }
 
@@ -429,24 +432,44 @@ function limparFooterRodapeCaixa(){
 }
 
 function finalizarVenda(tipoVenda){
-    let elCli = document.getElementById("cliente").value;
-    let especValue = $("input[name='especie']:checked").val();
-    let listaProdutosVenda = listaPCaixa;
-    let totalVenda = subtotalCaixa;
+    let elCli = "";
+    let especValue = "";
 
-    if ((elCli === "" || elCli === null) && especValue === "crediario"){
-        exibirAlertaModal("Cliente", "Para venda em crediário é necessário selecionar cliente");
-        return false;
-    }else if (especValue === undefined){
-        exibirAlertaModal("Especie", "Para continuar selecione uma especie");
-        return false;
+    if (document.getElementById("cliente") === null) {
+        elCli = "";
+        especValue = "dinheiro";
     }else{
-        $.post("DAO/finalizarVenda.php", {tipo:"V", cliente:elCli, subtotal:totalVenda,
-            especie:especValue, lista:listaProdutosVenda}, function (data) {
-            alert(data);
-        })
+        elCli = document.getElementById("cliente").value;
+        especValue = $("input[name='especie']:checked").val();
     }
 
+    if (listaPCaixa.length === 0 || subtotalCaixa === 0){
+        alert("Nenhuma venda para cancelar");
+        $('#selectCaixa')[0].value = "";
+    } else{
+        if ((elCli === "" || elCli === null) && especValue === "crediario"){
+            exibirAlertaModal("Cliente", "Para venda em crediário é necessário selecionar cliente");
+            return false;
+        }else if (especValue === undefined){
+            exibirAlertaModal("Especie", "Para continuar selecione uma especie");
+            return false;
+        }else{
+            $.post("DAO/finalizarVenda.php", {tipo:tipoVenda, cliente:elCli, subtotal:subtotalCaixa,
+                especie:especValue, lista:listaPCaixa}, function (data) {
+                if (data === "ok"){
+                    limpaTelaCaixa(tipoVenda);
+                    if (tipoVenda === "C"){
+                        alert("Venda Cancelada");
+                        $('#selectCaixa')[0].value = "";
+                    }
+                } else{
+                    if (tipoVenda === "V"){
+                        exibirAlertaModal("venda", "Venda não foi concluida, cancele e tente novamente");
+                    }
+                }
+            })
+        }
+    }
 }
 
 function pesquisaCliente(id){
@@ -474,9 +497,109 @@ function pesquisaCliente(id){
 
 }
 
+function limpaTelaCaixa(tipo){
+    if (tipo === "V"){
+        fecharPesquisaReact();
+        fecharCompReact();
+    }
+    listaPCaixa = [];
+    subtotalCaixa = 0;
+    removerComponentR();
+    apagarCamposCaixa();
+    $('#subtotal')[0].value = "";
+    $('#produto').focus();
+}
+
+function receberCrediario(id){
+    if (id === null){
+        alert("Não foi informado cliente");
+    }else{
+        $.get("DAO/consultaCliente.php", "pesquisa="+id, function (data) {
+            let retorno = JSON.parse(data);
+
+            exibirModalCrediario(retorno);
+        })
+    }
+}
+
+function baixarCrediario(id, valorComprado){
+    let valorPago = document.getElementById("valorPago").value;
+    valorPago = parseFloat(valorPago.replace(".", "").replace(",", "."));
+    if (valorPago > valorComprado){
+        alert("Valor pago não pode ser maior que valor comprado: "+valorPago+"\nValor Comprado: "+valorComprado);
+    }else if (valorPago === "" || valorPago === null || id === "" || id === null){
+        alert("Valor pago ou cliente não informado");
+    }else{
+        $.post("DAO/baixarCrediario.php", {id:id, valorPago:valorPago}, function (data) {
+            if (data === ""){
+                alert("Crediário recebido");
+                fecharCompReact();
+            } else{
+                alert("Erro inesperado");
+            }
+        })
+    }
+}
+
+function consultarVendas(){
+    let dtIni = $('#dtIni')[0].value;
+    let dtFim = $('#dtFim')[0].value;
+    let soCliente = document.getElementById("soCliente").checked;
+    let porItem = document.getElementById("porItem").checked;
+    let cliente = $('#cliente')[0].value;
+    if (dtIni === "" || dtFim === ""){
+        console.log("Deve ser informada data de inicio e fim");
+    } else if(dtFim < dtIni){
+        console.log("Data final não pode ser anterior a data inicial");
+    }else{
+        $.post("DAO/consultaVendas.php", {dtIni:dtIni, dtFim:dtFim, soCliente:soCliente, cliente:cliente, porItem:porItem}, function (data) {
+            let retorno = JSON.parse(data);
+
+            if(cliente !== ""){
+                if (porItem){
+                    removerFiltro();
+                    exibirRelatorioGen("clientePorItem", retorno);
+                } else{
+                    removerFiltro();
+                    exibirRelatorioGen("clientePorNota", retorno);
+                }
+            }else if(soCliente){
+                if (porItem){
+                    console.log(retorno);
+                } else{
+                    console.log(retorno);
+                }
+            }else{
+                if (porItem){
+                    console.log(retorno);
+                } else{
+                    console.log(retorno);
+                }
+            }
+        })
+    }
+}
+
+function removerFiltro(){
+    let node = document.getElementById("titulo");
+    let node1 = document.getElementById("filtro");
+
+    if (node.parentNode) {
+        node.parentNode.removeChild(node);
+    }
+
+    if (node1.parentNode) {
+        node1.parentNode.removeChild(node1);
+    }
+}
+
 //Mascaras jquery
 $('.valor').mask('#.##0,00', {reverse: true});
 $('.quantidade').mask('#.##0', {reverse: true});
 $('.quantidadeDec').mask('#.##0,000', {reverse: true});
 $('.desconto').mask('00,00', {reverse: true});
 $('.valorVenda').mask('#.##0,000', {reverse: true});
+$('.cpf').mask('000.000.000-00');
+$('.numero').mask('0000000');
+$('.cep').mask('00000-000');
+$('.cnpj').mask('00.000.000/0000-00');

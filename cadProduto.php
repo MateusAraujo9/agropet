@@ -63,7 +63,7 @@
                 </div>
                 <div class="col-md-3">
                     <label class="col-form-label" for="qtd">Quantidade</label>
-                    <input type="text" class="form-control" id="qtd" name="qtd">
+                    <input type="text" class="form-control quantidadeDec" id="qtd" name="qtd" maxlength="11">
                 </div>
                 <div class="col-md-2">
                     <label class="col-form-label" for="unidade">Unidade</label>
@@ -130,14 +130,14 @@
                     <label class="col-form-label" for="vlComp">Valor de Compra</label>
                     <div class="input-group-prepend">
                         <span class="input-group-text">R$</span>
-                        <input type="text" class="form-control" id="vlComp" name="vlComp">
+                        <input type="text" class="form-control valor" id="vlComp" name="vlComp" maxlength="9">
                     </div>
                 </div>
                 <div class="col-md-4">
                     <label class="col-form-label" for="vlVen">Valor de Venda</label>
                     <div class="input-group-prepend">
                         <span class="input-group-text">R$</span>
-                        <input type="text" class="form-control" id="vlVen" name="vlVen">
+                        <input type="text" class="form-control valor" id="vlVen" name="vlVen" maxlength="9">
                     </div>
 
                 </div>

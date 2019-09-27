@@ -51,7 +51,7 @@ if ($listaProdutos === "" || $tipoVenda === "" || $subtotal === "" || $especie =
     }
 
     //Insert Venda
-    if ($sqlCli->rowCount()>0){
+    if ($cliente !== ""){
         $sqlInsertVenda = "INSERT INTO venda (id_usuario, id_cliente, valor_total, id_especie, tipo_venda, data_venda, id_caixa)
                         VALUE ('".$result['id_user']."', '".$dadosCliente['id']."', '$subtotal', '$id_especie', '$tipoVenda', now(), '".$result['id_caixa']."')";
     }else{
@@ -72,7 +72,7 @@ if ($listaProdutos === "" || $tipoVenda === "" || $subtotal === "" || $especie =
     }catch (PDOException $e){
         $e->getMessage();
     }
-    //Insert Itens
+    //Insert Itens e baixa estoque
     foreach ($listaProdutos as $produto){
         $sqlInsertItem = "INSERT INTO itens_venda (id_venda, id_produto, quantidade, valor_total, desconto, valor_bruto, valor_liquido_unitario) 
                           VALUES ('".$sqlPegaVenda['numero_venda']."', '".$produto['id']."', '".$produto['quantidade']."', '".$produto['vlTotal']."', '".$produto['desconto']."',
@@ -83,6 +83,15 @@ if ($listaProdutos === "" || $tipoVenda === "" || $subtotal === "" || $especie =
         }catch (PDOException $e){
             $e->getMessage();
         }
+
+        $sqlBaixaEstoque = "UPDATE produto SET quantidade = quantidade - ".$produto['quantidade']." WHERE id = ".$produto['id'];
+
+        try{
+            $pdo->query($sqlBaixaEstoque);
+        }catch (PDOException $e){
+            $e->getMessage();
+        }
+
     }
     //Caso crediario deve inserir crediario
     if ($id_especie === 3){
@@ -95,5 +104,17 @@ if ($listaProdutos === "" || $tipoVenda === "" || $subtotal === "" || $especie =
         }catch (PDOException $e){
             $e->getMessage();
         }
+
+
+        $sqlValorComprado = "UPDATE cliente SET valor_comprado = valor_comprado + $subtotal WHERE id = '".$dadosCliente['id']."'";
+
+        try{
+            $pdo->query($sqlValorComprado);
+        }catch (PDOException $e){
+            $e->getMessage();
+        }
+
     }
+
+    echo "ok";
 }

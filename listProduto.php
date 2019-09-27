@@ -67,16 +67,18 @@ if ($quantidadePaginas > intval($quantidadePaginas)){
     </thead>
     <tbody id="listItens">
     <?php
-    foreach ($produto as $p){
-        echo "<tr>";
-        echo "    <td>".$p['id_produto']."</td>";
-        echo "    <td>".$p['nome_produto']."</td>";
-        echo "    <td>".$p['barra']."</td>";
-        echo "    <td>".$p['nome_fornecedor']."</td>";
-        echo "    <td>R$ ".$p['vlCompra']."</td>";
-        echo "    <td>R$ ".$p['vlVenda']."</td>";
-        echo "    <td><img src=\"resourse/imagens/editar.png\" alt=\"editarProduto\" title=\"Editar\" class=\"btnListUser\" onclick=\"window.location='editarProduto.php?produto=".$p['id_produto']."'\"></td>";
-        echo "</tr>";
+    if ($quantidadeProdutos['qtd'] > 0){
+        foreach ($produto as $p){
+            echo "<tr>";
+            echo "    <td>".$p['id_produto']."</td>";
+            echo "    <td>".$p['nome_produto']."</td>";
+            echo "    <td>".$p['barra']."</td>";
+            echo "    <td>".$p['nome_fornecedor']."</td>";
+            echo "    <td>R$ ".$p['vlCompra']."</td>";
+            echo "    <td>R$ ".$p['vlVenda']."</td>";
+            echo "    <td><img src=\"resourse/imagens/editar.png\" alt=\"editarProduto\" title=\"Editar\" class=\"btnListUser\" onclick=\"window.location='editarProduto.php?produto=".$p['id_produto']."'\"></td>";
+            echo "</tr>";
+        }
     }
     echo "</tbody>";
 ?>
