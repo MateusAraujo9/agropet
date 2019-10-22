@@ -38,6 +38,7 @@ app.config(function ($routeProvider) {
         .when("/convertEstoque", {templateUrl: "conversaoDeEstoque.html"})
         .when("/entradaEstoque", {templateUrl: "entradaEstoque.html"})
         .when("/rVendas", {templateUrl: "relatorioVendas.html"})
+        .when("/rCrediario", {templateUrl: "relatorioCrediario.html"})
 });
 
 app.controller("meuAppCtrl", function ($scope, $http) {
@@ -376,8 +377,8 @@ function acoesCaixa(opcao){
     }
 }
 
-function abrirCaixaUser(valor){
-    $.get("DAO/abreCaixa.php", "valor="+valor, function (data) {
+function abrirCaixaUser(cedula, moeda){
+    $.get("DAO/abreCaixa.php", {cedula:cedula, moeda:moeda}, function (data) {
         let retorno = data;
 
         if (retorno === "erro") {
@@ -434,6 +435,7 @@ function limparFooterRodapeCaixa(){
 function finalizarVenda(tipoVenda){
     let elCli = "";
     let especValue = "";
+    let dataVencimento = "";
 
     if (document.getElementById("cliente") === null) {
         elCli = "";
@@ -441,6 +443,9 @@ function finalizarVenda(tipoVenda){
     }else{
         elCli = document.getElementById("cliente").value;
         especValue = $("input[name='especie']:checked").val();
+        if (especValue === "crediario"){
+            dataVencimento = document.getElementById("vencimento").value;
+        }
     }
 
     if (listaPCaixa.length === 0 || subtotalCaixa === 0){
@@ -455,7 +460,7 @@ function finalizarVenda(tipoVenda){
             return false;
         }else{
             $.post("DAO/finalizarVenda.php", {tipo:tipoVenda, cliente:elCli, subtotal:subtotalCaixa,
-                especie:especValue, lista:listaPCaixa}, function (data) {
+                especie:especValue, lista:listaPCaixa, vencimento:dataVencimento}, function (data) {
                 if (data === "ok"){
                     limpaTelaCaixa(tipoVenda);
                     if (tipoVenda === "C"){
@@ -593,6 +598,72 @@ function removerFiltro(){
     }
 }
 
+function calcularQuantidade(elemento){
+    let p = $('#produto')[0];
+    if (p.value === ""){
+        elemento.value = "";
+        $('#quantidade')[0].value = "";
+        p.focus();
+
+    } else{
+        let valor = parseFloat(elemento.value.replace(",", "."));
+        let novaQuantidade = valor / produtoC.vlBruto;
+        if (isNaN(novaQuantidade)){
+            $('#quantidade')[0].value = "";
+        }else{
+            $('#quantidade')[0].value = (novaQuantidade.toFixed(3)+"").replace(".", ",");
+        }
+
+    }
+}
+
+function calcularValor(elemento){
+    let p = $('#produto')[0];
+    if (p.value === ""){
+        elemento.value = "";
+        $('#vlUnit')[0].value = "";
+        p.focus();
+    } else{
+        let quant = parseFloat(elemento.value.replace(",", "."));
+        console.log(quant);
+        let novoValor = quant* produtoC.vlBruto;
+       if (isNaN(novoValor)){
+           $('#vlUnit')[0].value = "";
+       }else{
+           $('#vlUnit')[0].value = (novoValor.toFixed(3)+"").replace(".", ",");
+       }
+    }
+
+}
+
+function consultarCrediario(pagina){
+    let tipo = $('#tipo')[0].value;
+    let dtIni = $('#dtIni')[0].value;
+    let dtFim = $('#dtFim')[0].value;
+    let cliente = $('#cliente')[0].value;
+
+    //console.log("Tipo: "+tipo+"\nCliente: "+cliente+"\nInicio: "+dtIni+"\nFim: "+dtFim+"\nPagina: "+pagina);
+
+    if (dtIni == "" || dtFim == "" || dtIni > dtFim) {
+        alert("Erro, não vai dar não!");
+    }else{
+       consultaCrediarioDao(tipo, dtIni, dtFim, cliente, pagina);
+    }
+}
+
+function consultaCrediarioDao(tipo, dtIni, dtFim, cliente, pagina){
+    $.get("DAO/consultaCrediario.php", {tipo:tipo, dtIni:dtIni, dtFim:dtFim, cliente:cliente, pagina:pagina}, function (data) {
+        if (data == "false") {
+            alert("Nenhum crediário encontrador");
+        }else{
+            let retorno = JSON.parse(data);
+            //console.log(retorno);
+            removerFiltro();
+            exibirRelatorioCrediario("Relatório de Crediário", retorno);
+        }
+    })
+}
+
 //Mascaras jquery
 $('.valor').mask('#.##0,00', {reverse: true});
 $('.quantidade').mask('#.##0', {reverse: true});
@@ -603,3 +674,5 @@ $('.cpf').mask('000.000.000-00');
 $('.numero').mask('0000000');
 $('.cep').mask('00000-000');
 $('.cnpj').mask('00.000.000/0000-00');
+$('.numeroCaixa').mask('##0,000', {reverse: true});
+

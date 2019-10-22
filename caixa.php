@@ -7,12 +7,12 @@ if ($logado == 'false' || empty($logado)){
     header("Location: /login.php");
 }
 
-$sql = "SELECT C.id, U.nome FROM caixa C, usuario U WHERE C.id_usuario = U.id AND U.token = '$tkuser' AND C.tipo = 'A'";
+$sqlCaixa = "SELECT C.id, U.nome FROM caixa C, usuario U WHERE C.id_usuario = U.id AND U.token = '$tkuser' AND C.tipo = 'A'";
 
 try{
-    $sql = $pdo->query($sql);
+    $sqlCaixa = $pdo->query($sqlCaixa);
 
-    $result = $sql->fetch();
+    $result = $sqlCaixa->fetch();
 }catch (PDOException $e){
     echo "Erro: ".$e->getMessage();
 }
@@ -81,7 +81,7 @@ try{
             <li class="nav-item" onmouseenter="subMenu('dropRelatorio')" onmouseleave="subMenu('dropRelatorio')">
                 <a class="nav-link" href="#">Relatórios</a>
                 <ul id="dropRelatorio" class="esconde">
-                    <a href="#!rVendas" class="linkMenu"><li class="itemDrop">Vendas</li></a>
+                    <a href="/#!rVendas" class="linkMenu"><li class="itemDrop">Vendas</li></a>
                     <a href="#" class="linkMenu"><li class="itemDrop">Crediário</li></a>
                 </ul>
             </li>
@@ -122,14 +122,12 @@ try{
                         alert("Caixa Fechado");
                         console.log(caixa);
                     }
-                }else if(e.target.getAttribute("id") === "quantidade"){
-                    let quant = $('#quantidade')[0].value;
+                }else if(e.target.getAttribute("id") === "quantidade" || e.target.getAttribute("id") === "vlUnit"){
+                    let quant = $('#quantidade')[0].value.replace(",", ".");
                     if (quant !== "" && quant != null && quant > 0){
                         produtoC.quantidade = quant;
-                        produtoC.vlTotal = produtoC.quantidade*produtoC.vlLiquido;
-                        produtoC.vlTotal = parseFloat(produtoC.vlTotal.toFixed(3));
-                        let elVlVen = $('#vlUnit')[0];
-                        elVlVen.value = produtoC.vlTotal;
+                        produtoC.vlTotal = $('#vlUnit')[0].value.replace(",", ".");
+                        produtoC.vlTotal = parseFloat(produtoC.vlTotal).toFixed(2);
                         $('#desconto').focus();
                     }
                 }else if(e.target.getAttribute("id") === "desconto"){
@@ -150,13 +148,13 @@ try{
 
                             let novoValor = produtoC.vlBruto - (produtoC.vlBruto * (desconto / 100));
 
-                            produtoC.vlLiquido = parseFloat(novoValor.toFixed(3));
-                            produtoC.vlTotal = parseFloat((produtoC.vlLiquido * produtoC.quantidade).toFixed(3));
+                            produtoC.vlLiquido = parseFloat(novoValor.toFixed(2));
+                            produtoC.vlTotal = parseFloat((produtoC.vlLiquido * produtoC.quantidade).toFixed(2));
 
                             elVlVen.value = parseFloat(produtoC.vlTotal);
 
                             listaPCaixa.push(produtoC);
-                            subtotalCaixa = parseFloat((subtotalCaixa + produtoC.vlTotal).toFixed(3));
+                            subtotalCaixa = parseFloat((subtotalCaixa + produtoC.vlTotal).toFixed(2));
                             produtoC = {};
                             $('#subtotal')[0].value = subtotalCaixa;
                             p.focus();
@@ -195,11 +193,11 @@ try{
                 <div class="linhaCaixa">
                     <div class="form-group camposCaixa">
                         <label class="col-form-label col-form-label-lg" for="quantidade">Quantidade</label>
-                        <input class="form-control form-control-lg inputCaixaQtd quantidadeDec" type="text" id="quantidade" name="quantidade" maxlength="12">
+                        <input class="form-control form-control-lg inputCaixaQtd numeroCaixa" type="text" id="quantidade" name="quantidade" maxlength="12" onkeyup="calcularValor(this)">
                     </div>
                     <div class="form-group camposCaixa">
                         <label class="col-form-label col-form-label-lg" for="vlUnit">Valor Venda</label>
-                        <input class="form-control form-control-lg valorVenda" type="text" id="vlUnit" name="vlUnit" readonly="">
+                        <input class="form-control form-control-lg numeroCaixa" type="text" id="vlUnit" name="vlUnit" onkeyup="calcularQuantidade(this)" maxlength="12">
                     </div>
                 </div>
                 <div class="linhaCaixa">
@@ -219,7 +217,8 @@ try{
         </div>
         <div class="footer" id="footer">
             <?php
-            if ($sql->rowCount() > 0){
+            if ($sqlCaixa->rowCount() > 0){
+                //print_r($sqlCaixa->rowCount());
                 echo "<p id='pFooterCaixa'>CAIXA ABERTO - Nº Caixa: ".$result['id']." - Usuario: ".$result['nome']."</p>";
             }
             ?>

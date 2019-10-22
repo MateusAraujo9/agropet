@@ -6,6 +6,7 @@ $tipoVenda = isset($_POST['tipo'])?$_POST['tipo']:"";
 $subtotal = isset($_POST['subtotal'])?$_POST['subtotal']:"";
 $cliente = isset($_POST['cliente'])?$_POST['cliente']:"";
 $especie = isset($_POST['especie'])?$_POST['especie']:"";
+$vencimento = isset($_POST['vencimento'])?$_POST['vencimento']:"";
 
 
 if ($listaProdutos === "" || $tipoVenda === "" || $subtotal === "" || $especie === ""){
@@ -42,11 +43,14 @@ if ($listaProdutos === "" || $tipoVenda === "" || $subtotal === "" || $especie =
         case "dinheiro":
             $id_especie = 1;
             break;
-        case "cartao":
+        case "debito":
             $id_especie = 2;
             break;
         case "crediario":
             $id_especie = 3;
+            break;
+        case "credito":
+            $id_especie = 4;
             break;
     }
 
@@ -95,7 +99,7 @@ if ($listaProdutos === "" || $tipoVenda === "" || $subtotal === "" || $especie =
     }
     //Caso crediario deve inserir crediario
     if ($id_especie === 3){
-        $vencimento = date('Y-m-d', strtotime('+30 days'));
+
         $sqlInsertCrediario = "INSERT INTO crediario (id_cliente, valor_a_pagar, data_inclusao, data_vencimento, numero_venda) 
                                 VALUES ('".$dadosCliente['id']."', '$subtotal', now(), '$vencimento', '".$sqlPegaVenda['numero_venda']."')";
 

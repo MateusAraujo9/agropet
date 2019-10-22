@@ -1,9 +1,10 @@
 <?php
 require "conection.php";
 
-$valor = isset($_GET['valor'])?$_GET['valor']:"false";
+$cedula = isset($_GET['cedula'])?$_GET['cedula']:"false";
+$moeda = isset($_GET['moeda'])?$_GET['moeda']:"0";
 
-if ($valor==="false") {
+if ($cedula==="false") {
     echo "erro";
 }else{
     $tkUser = isset($_COOKIE['tkuser'])?$_COOKIE['tkuser']:"0";
@@ -29,8 +30,8 @@ if ($valor==="false") {
 
         $idUsuario = $sql['id'];
 
-        $sqlC = "INSERT INTO caixa (id_usuario, tipo, valor_abertura, data_abertura) 
-                 VALUES ('$idUsuario', 'A', '$valor', now())";
+        $sqlC = "INSERT INTO caixa (id_usuario, tipo, valor_abertura_cedula, valor_abertura_moeda, data_abertura) 
+                 VALUES ('$idUsuario', 'A', '$cedula', '$moeda', now())";
 
         try{
             $sqlC = $pdo->query($sqlC);

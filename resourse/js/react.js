@@ -646,11 +646,13 @@ class ModalAbreCaixa extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            vlAbre: 0
+            vlAbre: 0,
+            vlMoeda: 0,
         }
 
         this.valorTrocou = this.valorTrocou.bind(this);
         this.abrirCaixa = this.abrirCaixa.bind(this);
+        this.valorMoeda = this.valorMoeda.bind(this);
     }
 
     valorTrocou(e){
@@ -658,8 +660,13 @@ class ModalAbreCaixa extends React.Component{
         this.setState({vlAbre:novoValor});
     }
 
+    valorMoeda(e){
+        let novoValor = e.target.value.replace(".", "").replace(",", ".");
+        this.setState({vlMoeda:novoValor});
+    }
+
     abrirCaixa(){
-        abrirCaixaUser(this.state.vlAbre);
+        abrirCaixaUser(this.state.vlAbre, this.state.vlMoeda);
         fecharCompReact();
     }
 
@@ -674,8 +681,12 @@ class ModalAbreCaixa extends React.Component{
                             </div>
                             <div className="modal-body">
                                 <div className="form-group">
-                                    <label className="col-form-label" htmlFor="vlAbre">Valor Abertura</label>
+                                    <label className="col-form-label" htmlFor="vlAbre">Valor Abertura (Cédula)</label>
                                     <input type="text" className="form-control valor" id="vlAbre" onKeyUp={this.valorTrocou} maxLength="8"/>
+                                </div>
+                                <div className="form-group">
+                                    <label className="col-form-label" htmlFor="vlMoeda">Valor Abertura (Moeda)</label>
+                                    <input type="text" className="form-control valor" id="vlMoeda" onKeyUp={this.valorMoeda} maxLength="8"/>
                                 </div>
                             </div>
                             <div className="modal-footer">
@@ -732,6 +743,7 @@ class ModalFinalizaVenda extends React.Component{
         }
         this.ajuste = this.ajuste.bind(this);
         this.troco = this.troco.bind(this);
+        this.habilitaData = this.habilitaData.bind(this);
     }
 
     ajuste(nr, casas) {
@@ -743,6 +755,26 @@ class ModalFinalizaVenda extends React.Component{
         let novoValor = e.target.value.replace(".", "").replace(",", ".");
         novoValor = this.ajuste((novoValor - this.ajuste(this.props.subtotal, 2)), 2);
         this.setState({troco:novoValor});
+    }
+
+    habilitaData(){
+        if (document.getElementById("crediario").checked === true) {
+            document.getElementById("vencimento").disabled = false;
+
+            let today = new Date();
+            today.setDate(today.getDate() + 30);
+            let dia = today.getDate().toString();
+            dia = (dia.length === 1) ? "0"+dia:dia;
+            let mes = today.getMonth() + 1;
+            mes = (mes.length === 1) ? "0"+mes:mes;
+            let ano = today.getFullYear();
+            let dataAtual = ano+"-"+mes+"-"+dia;
+            console.log(dataAtual);
+
+            document.getElementById("vencimento").value = dataAtual;
+        }else{
+            document.getElementById("vencimento").disabled = true;
+        }
     }
 
     render(){
@@ -776,19 +808,28 @@ class ModalFinalizaVenda extends React.Component{
                                     <div className="form-group especieLinha">
                                         <div className="custom-control custom-radio especieItem">
                                             <input type="radio" id="dinheiro" name="especie"
-                                                   className="custom-control-input" value="dinheiro"/>
+                                                   className="custom-control-input" value="dinheiro" onClick={this.habilitaData}/>
                                                 <label className="custom-control-label" htmlFor="dinheiro">Dinheiro</label>
                                         </div>
                                         <div className="custom-control custom-radio especieItem">
-                                            <input type="radio" id="cartao" name="especie"
-                                                   className="custom-control-input" value="cartao"/>
-                                                <label className="custom-control-label" htmlFor="cartao">Cartão</label>
+                                            <input type="radio" id="debito" name="especie"
+                                                   className="custom-control-input" value="debito" onClick={this.habilitaData}/>
+                                                <label className="custom-control-label" htmlFor="debito">Débito</label>
+                                        </div>
+                                        <div className="custom-control custom-radio especieItem">
+                                            <input type="radio" id="credito" name="especie"
+                                                   className="custom-control-input" value="credito" onClick={this.habilitaData}/>
+                                            <label className="custom-control-label" htmlFor="credito">Crédito</label>
                                         </div>
                                         <div className="custom-control custom-radio especieItem">
                                             <input type="radio" id="crediario" name="especie"
-                                                   className="custom-control-input" value="crediario"/>
+                                                   className="custom-control-input" value="crediario" onClick={this.habilitaData}/>
                                                 <label className="custom-control-label" htmlFor="crediario">Crediário</label>
                                         </div>
+                                    </div>
+                                    <div className="form-group col-md-6">
+                                        <label className="col-form-label" htmlFor="vencimento">Vencimento</label>
+                                        <input type="date" className="form-control" id="vencimento" disabled/>
                                     </div>
                                     <div className="form-group camposCaixa">
                                         <label className="col-form-label col-form-label-lg"
@@ -1001,20 +1042,17 @@ function exibirModalCrediario(lista) {
 class LinhaGen extends React.Component{
     render(){
         let lista;
-        if (this.props.tipo === "clientePorItem") {
-            lista = (
-                <tr>
-                    <td>{this.props.item['dtVenda']}</td>
-                    <td>{this.props.item['nVenda']}</td>
-                    <td>{this.props.item['produto']}</td>
-                    <td>{this.props.item['quantidade']}</td>
-                    <td>{this.props.item['vlLiquido']}</td>
-                    <td>{this.props.item['vlBruto']}</td>
-                    <td>{this.props.item['desconto']}</td>
-                    <td>{this.props.item['vlTotal']}</td>
-                </tr>
-            )
-        }
+        lista = (
+            <tr>
+                {
+                    Object.entries(header).map(([key])=>{
+                        return (
+                            <td>{this.props.item[{key}]}</td>
+                        )
+                    })
+                }
+            </tr>
+        );
         return lista;
     }
 }
@@ -1022,13 +1060,13 @@ class LinhaGen extends React.Component{
 class TbBody extends React.Component{
     render(){
         let cont = 0;
-        let lista = this.props.body.map((item)=>{
+        let lista = this.props.lista.map((item)=>{
             cont++;
             return(
                 <LinhaGen
                     key={cont}
                     item={item}
-                    tipo={this.props.tipo}
+                    header={this.props.header}
                 />
             );
         });
@@ -1044,23 +1082,17 @@ class TbBody extends React.Component{
 class TbHeader extends React.Component{
     render(){
         let lista;
-        if (this.props.tipo === "clientePorItem"){
-            lista = (
-                <tr>
-                    <th scope="col">Data</th>
-                    <th scope="col">Nº Venda</th>
-                    <th scope="col">Produto</th>
-                    <th scope="col">quantidade</th>
-                    <th scope="col">Vl Liquido</th>
-                    <th scope="col">Vl Bruto</th>
-                    <th scope="col">Desconto</th>
-                    <th scope="col">Vl Total</th>
-                </tr>
-            )
-        }
+        lista = this.props.header.map((item)=>{
+                    return (
+                        <th scope="col">{item}</th>
+                    )
+                }
+        );
         return(
             <thead>
-                {lista}
+                <tr>
+                    {lista}
+                </tr>
             </thead>
         )
     }
@@ -1070,18 +1102,25 @@ class TabelaGen extends React.Component{
     render(){
         return(
             <table className="table table-hover" id="tabela">
-                <TbHeader tipo={this.props.tipo}/>
-                <TbBody body={this.props.body} tipo={this.props.tipo}/>
+                <TbHeader header={this.props.header}/>
+                <TbBody header={this.props.header} lista={this.props.lista}/>
             </table>
         )
     }
 }
 
-function exibirRelatorioGen(tipo, body) {
+//Ultimo item da lista é o cabeçalho da tabela
+function exibirRelatorioCrediario(titulo, lista) {
+    let header = lista[lista.length-2];
+    let pagination = lista[lista.length-1];
+
+    console.log(header);
+
     let elemento = (
         <div>
-            <h3 className="titulo" id="titulo">Relatório de Vendas</h3>
-            <TabelaGen tipo={tipo} body={body}/>
+            <h3 className="titulo" id="titulo">{titulo}</h3>
+            <TabelaGen lista={lista} header={header}/>
+
         </div>
     );
 
