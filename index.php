@@ -16,25 +16,10 @@ if ($logado == 'false' || empty($logado)){
 
     <!--Bootstrap-->
     <link rel="stylesheet" href="resourse/css/bootstrap.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
-    <script src="https://igorescobar.github.io/jQuery-Mask-Plugin/js/jquery.mask.min.js"></script>
-
-    <!--React-->
-    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
-    <script crossorigin src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-
-    <!--Angular-->
-    <script src="resourse/js/angular.js"></script>
-    <script src="resourse/js/angular-route.js"></script>
 
     <!--Meus links-->
     <link rel="stylesheet" href="resourse/css/style.css">
-    <script src="resourse/js/script.js"></script>
-    <script type="text/babel" src="resourse/js/react.js"></script>
     <meta charset="utf-8">
 </head>
 <body ng-app="meuApp" onload="setPagina(2)">
@@ -94,6 +79,27 @@ if ($logado == 'false' || empty($logado)){
 <div ng-view ng-controller="meuAppCtrl">
 
 </div>
+
+<!--Bootstrap-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+<script src="https://igorescobar.github.io/jQuery-Mask-Plugin/js/jquery.mask.min.js"></script>
+
+<!--React-->
+<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+<script crossorigin src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+<!--Angular-->
+<script src="resourse/js/angular.js"></script>
+<script src="resourse/js/angular-route.js"></script>
+
+<!--Meus links-->
+<script src="resourse/js/script.js"></script>
+<script type="text/babel" src="resourse/js/react.js"></script>
+
 </body>
 </html>
   

@@ -1042,18 +1042,19 @@ function exibirModalCrediario(lista) {
 class LinhaGen extends React.Component{
     render(){
         let lista;
-        lista = (
+        let chave = Object.keys(this.props.header);
+        let cont = 0;
+        lista = chave.map((keyC)=>{
+            cont++;
+            return (
+                <td key={cont}>{this.props.item[keyC]}</td>
+            )
+        });
+        return (
             <tr>
-                {
-                    Object.entries(header).map(([key])=>{
-                        return (
-                            <td>{this.props.item[{key}]}</td>
-                        )
-                    })
-                }
+                {lista}
             </tr>
         );
-        return lista;
     }
 }
 
@@ -1082,11 +1083,14 @@ class TbBody extends React.Component{
 class TbHeader extends React.Component{
     render(){
         let lista;
-        lista = this.props.header.map((item)=>{
-                    return (
-                        <th scope="col">{item}</th>
-                    )
-                }
+        let chave = Object.keys(this.props.header);
+        let cont = 0;
+        lista = chave.map((item)=>{
+                cont++;
+                return (
+                    <th key={cont} scope="col">{this.props.header[item]}</th>
+                )
+            }
         );
         return(
             <thead>
@@ -1109,18 +1113,56 @@ class TabelaGen extends React.Component{
     }
 }
 
-//Ultimo item da lista é o cabeçalho da tabela
-function exibirRelatorioCrediario(titulo, lista) {
+class PaginacaoCrediario extends React.Component{
+    render(){
+        let pagAnterior = this.props.pagina-1;
+        let pagina = this.props.pagina;
+        let pagSeguinte = this.props.pagina+1;
+        let ultPagina = this.props.ultPagina;
+
+        let proxP = "";
+        if (this.props.ultPagina > 1 && this.props.pagina < this.props.ultPagina){
+            proxP = (
+                <li>
+                    <a className="page-link" href="javascript:;" onClick={()=>{consultaCrediarioDao(this.props.tipo, this.props.dtIni, this.props.dtFim, this.props.cliente, pagSeguinte)}}>{pagSeguinte}</a>
+                </li>
+            );
+        }
+        return(
+            <ul className={"pagination"}>
+                <li className="page-item">
+                    <a className="page-link" href="javascript:;" onClick={()=>{consultaCrediarioDao(this.props.tipo, this.props.dtIni, this.props.dtFim, this.props.cliente, 1)}}>&laquo;</a>
+                </li>
+                {this.props.pagina>1?
+                    <li className="page-item">
+                        <a className="page-link" href="javascript:;" onClick={()=>{consultaCrediarioDao(this.props.tipo, this.props.dtIni, this.props.dtFim, this.props.cliente, pagAnterior)}}>{pagAnterior}</a>
+                    </li>:""
+                }
+                <li className="page-item active">
+                    <a className="page-link" href="javascript:;" onClick={()=>{consultaCrediarioDao(this.props.tipo, this.props.dtIni, this.props.dtFim, this.props.cliente, pagina)}}>{pagina}</a>
+                </li>
+                {proxP}
+                <li className="page-item">
+                    <a className="page-link" href="javascript:;"  onClick={()=>{consultaCrediarioDao(this.props.tipo, this.props.dtIni, this.props.dtFim, this.props.cliente, ultPagina)}}>&raquo;</a>
+                </li>
+            </ul>
+        );
+    }
+}
+
+//Ultimo item da lista é a paginação (pagina e ultima página), penultimo item é o cabeçalho da tabela
+function exibirRelatorioCrediario(titulo, lista, tipo, dtIni, dtFim, cliente) {
     let header = lista[lista.length-2];
     let pagination = lista[lista.length-1];
+    lista.splice((lista.length-2), 2);
 
-    console.log(header);
-
+    console.log(pagination);
     let elemento = (
         <div>
-            <h3 className="titulo" id="titulo">{titulo}</h3>
+            <h3 className="titulo">{titulo}</h3>
+            <button className="btn btn-outline-primary btn-sm" onClick={()=>{window.reload()}}>Voltar</button>
             <TabelaGen lista={lista} header={header}/>
-
+            <PaginacaoCrediario tipo={tipo} dtIni={dtIni} dtFim={dtFim} cliente={cliente} pagina={pagination['pagina']} ultPagina={pagination['qtdPaginas']}/>
         </div>
     );
 

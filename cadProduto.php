@@ -116,7 +116,7 @@
                     <label class="col-form-label" for="fornecedor">Fornecedor</label>
                     <div class="form-group">
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="fornecedor" name="fornecedor">
+                            <input type="text" class="form-control" id="fornecedor" name="fornecedor" onblur="pesquisaFornecedor()">
                             <div class="input-group-append">
                                 <span class="input-group-text button" onclick="pesquisaFornecedor()"><img src="resourse/imagens/lupa.png" alt="lupa" title="Pesquisar"></span>
                             </div>
@@ -145,6 +145,40 @@
             <input type="submit" value="Cadastrar" class="btn btn-primary btn-lg btn-block btnCadastro">
         </form>
     </div>
+    <script type="text/javascript">
+        // $(document).keypress(function(e){
+        //     if (e.which === 13){
+        //         return false;
+        //     }
+        // }
+
+            $(document).ready(function() {
+                $('input').keypress(function(e) {
+                    var code = null;
+                    code = (e.keyCode ? e.keyCode : e.which);
+                    return (code === 13) ? false : true;
+
+                });
+
+                $('input[type=text]').keydown(function(e) {
+                    // Obter o próximo índice do elemento de entrada de texto
+                    var next_idx = $('input[type=text]').index(this) + 1;
+
+                    // Obter o número de elemento de entrada de texto em um documento html
+                    var tot_idx = $('body').find('input[type=text]').length;
+
+                    // Entra na tecla no código ASCII
+                    if (e.keyCode === 13) {
+                        if (tot_idx === next_idx)
+                        // Vá para o primeiro elemento de texto
+                            $('input[type=text]:eq(0)').focus();
+                        else
+                        // Vá para o elemento de entrada de texto seguinte
+                            $('input[type=text]:eq(' + next_idx + ')').focus();
+                    }
+                });
+            });
+    </script>
 </div>
 
 

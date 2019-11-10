@@ -39,7 +39,7 @@ if ($cedula==="false") {
             $e->getMessage();
         }
 
-        echo $sqlC->fetch();
+        //echo $sqlC->fetch();
 
         $sqlVerifica = $sql = "SELECT C.id as id, U.nome as nome FROM caixa C, usuario U WHERE C.id_usuario = U.id AND U.token = '$tkUser' AND C.tipo = 'A'";
 

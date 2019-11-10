@@ -589,12 +589,16 @@ function removerFiltro(){
     let node = document.getElementById("titulo");
     let node1 = document.getElementById("filtro");
 
-    if (node.parentNode) {
-        node.parentNode.removeChild(node);
+    if (node !== null) {
+        if (node.parentNode) {
+            node.parentNode.removeChild(node);
+        }
     }
 
-    if (node1.parentNode) {
-        node1.parentNode.removeChild(node1);
+    if (node1 !== null) {
+        if (node1.parentNode) {
+            node1.parentNode.removeChild(node1);
+        }
     }
 }
 
@@ -657,9 +661,12 @@ function consultaCrediarioDao(tipo, dtIni, dtFim, cliente, pagina){
             alert("Nenhum crediário encontrador");
         }else{
             let retorno = JSON.parse(data);
-            //console.log(retorno);
+            // //console.log(retorno[retorno.length - 2]);
+            // for (let attr in retorno[retorno.length - 2]){
+            //     console.log(attr+"\n");
+            // }
             removerFiltro();
-            exibirRelatorioCrediario("Relatório de Crediário", retorno);
+            exibirRelatorioCrediario("Relatório de Crediário", retorno, tipo, dtIni, dtFim, cliente);
         }
     })
 }

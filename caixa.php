@@ -82,7 +82,7 @@ try{
                 <a class="nav-link" href="#">Relatórios</a>
                 <ul id="dropRelatorio" class="esconde">
                     <a href="/#!rVendas" class="linkMenu"><li class="itemDrop">Vendas</li></a>
-                    <a href="#" class="linkMenu"><li class="itemDrop">Crediário</li></a>
+                    <a href="/#!rCrediario" class="linkMenu"><li class="itemDrop">Crediário</li></a>
                 </ul>
             </li>
         </ul>

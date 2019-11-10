@@ -28,6 +28,10 @@ if (
     echo "window.location.href = \"/#!/listProduto\"";
     echo "</script>";
 }else{
+    //trocar , por .
+    $vlVenda = str_replace(',', '.', $vlVenda);
+    $vlCompra = str_replace(',', '.', $vlCompra);
+
     //Pegar id fornecedor
     $sqlF = "SELECT id FROM fornecedor WHERE nome = '$fornecedor'";
 
@@ -49,12 +53,12 @@ if (
         echo "Erro: ".$e->getMessage();
     }
 
-    if(!$sql) {
+    //antes !$sql
+    if($sql == false) {
         echo "<script>";
         echo "alert('Produto Não cadastrado');";
         echo "window.location.href = \"/#!/listProduto\"";
         echo "</script>";
-
     }
     header("Location: /#!/listProduto");
 }
