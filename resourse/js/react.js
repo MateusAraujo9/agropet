@@ -969,7 +969,20 @@ function exibirAlertaModal(tipo, mensagem) {
 }
 
 class ModalCrediario extends React.Component{
+    constructor(props){
+        super(props);
+
+        this.formataValor = this.formataValor.bind(this);
+    }
+
+    formataValor(valor){
+        let x = parseFloat(valor).toFixed(2).replace('.', ',');
+        return x;
+    }
+
     render(){
+        let valorFormatado = this.formataValor(this.props.lista.valor_a_pagar);
+
         return(
             <div>
                 <div className="modal mostrar tamanhoModal" id="janelaFornecedor">
@@ -979,17 +992,14 @@ class ModalCrediario extends React.Component{
                                 <h5>Recebimento</h5>
                             </div>
                             <div className="modal-body scroll">
+                                <div id="pesquisaReact"></div>
                                 <div className="form-group">
                                     <label htmlFor="cliente" className="col-form-label">Cliente</label>
-                                    <input type="text" className="form-control" id="cliente" readOnly value={this.props.lista[0].nome}/>
+                                    <input type="text" className="form-control" id="cliente" readOnly value={this.props.lista.nome}/>
                                 </div>
                                 <div className="form-group">
-                                    <label htmlFor="vlComprado" className="col-form-label">Valor a Pagar</label>
-                                    <input type="text" className="form-control" id="vlComprado" readOnly value={this.props.lista[0].valor_comprado}/>
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="valorPago" className="col-form-label">Valor Pago</label>
-                                    <input type="text" className="form-control valor" id="valorPago" maxLength="10"/>
+                                    <label htmlFor="vlComprado" className="col-form-label">Valor da Conta</label>
+                                    <input type="text" className="form-control" id="vlComprado" readOnly value={valorFormatado}/>
                                 </div>
                                 <span>Forma de Pagamento</span>
                                 <div className="form-group especieLinha">
@@ -1008,16 +1018,11 @@ class ModalCrediario extends React.Component{
                                                className="custom-control-input" value="credito"/>
                                         <label className="custom-control-label" htmlFor="credito">Crédito</label>
                                     </div>
-                                    <div className="custom-control custom-radio especieItem">
-                                        <input type="radio" id="crediario" name="especie"
-                                               className="custom-control-input" value="crediario"/>
-                                        <label className="custom-control-label" htmlFor="crediario">Crediário</label>
-                                    </div>
                                 </div>
                             </div>
                             <div className="modal-footer">
-                                <button onClick={()=>{baixarCrediario(this.props.lista[0].id, this.props.lista[0].valor_comprado )}} className="btn btn-success">Receber</button>
-                                <button onClick={fecharCompReact} className="btn btn-secondary">Sair</button>
+                                <button onClick={()=>{baixarCrediario(this.props.lista.id_cliente, this.props.lista.id_crediario)}} className="btn btn-success">Pagar Conta</button>
+                                <button onClick={fecharCompR} className="btn btn-secondary">Sair</button>
                             </div>
                         </div>
                     </div>
@@ -1029,13 +1034,13 @@ class ModalCrediario extends React.Component{
 }
 
 function exibirModalCrediario(lista) {
-    let elemento = (
+   let elemento = (
         <ModalCrediario lista={lista}/>
     )
 
     ReactDOM.render(
         elemento,
-        document.getElementById("compReact")
+        document.getElementById("compR")
     )
 }
 
@@ -1046,13 +1051,18 @@ class LinhaGen extends React.Component{
         let cont = 0;
         lista = chave.map((keyC)=>{
             cont++;
-            return (
-                <td key={cont}>{this.props.item[keyC]}</td>
-            )
+            if (keyC === 'id'){
+                return null;
+            } else{
+                return (
+                    <td key={cont}>{this.props.item[keyC]}</td>
+                )
+            }
         });
         return (
             <tr>
                 {lista}
+                <td><img src="resourse/imagens/list-item.png" alt="Ver Itens" title="Ver Itens" className="btnListUser" onClick={()=>{listarProdutosCrediario(this.props.item['id'])}}/></td>
             </tr>
         );
     }
@@ -1087,15 +1097,20 @@ class TbHeader extends React.Component{
         let cont = 0;
         lista = chave.map((item)=>{
                 cont++;
-                return (
-                    <th key={cont} scope="col">{this.props.header[item]}</th>
-                )
+                if (item === "id") {
+                    return null;
+                }else{
+                    return (
+                        <th key={cont} scope="col">{this.props.header[item]}</th>
+                    )
+                }
             }
         );
         return(
             <thead>
                 <tr>
                     {lista}
+                    <th scope="col">Opção</th>
                 </tr>
             </thead>
         )
@@ -1150,18 +1165,57 @@ class PaginacaoCrediario extends React.Component{
     }
 }
 
+class TabelaCredAPgar extends React.Component{
+    render(){
+        // console.log(this.props.lista)
+        let cont = 0;
+        let lista = this.props.lista.map((item)=>{
+            cont++;
+            return(
+                <tr key={cont}>
+                    <td>{item['nome']}</td>
+                    <td>{item['valor_a_pagar']}</td>
+                    <td>{item['data_inclusao']}</td>
+                    <td>{item['data_vencimento']}</td>
+                    <td>
+                        <img src="resourse/imagens/cifrao.png" alt="Receber" title="Receber Crediário" className="btnListUser" onClick={()=>{receberCrediarioUnico(item['id_cliente'], item['id_crediario'])}} />
+                        <img src="resourse/imagens/list-item.png" alt="Ver Itens" title="Ver Itens" className="btnListUser" onClick={()=>{listarProdutosCrediario(item['id_crediario'])}}/>
+                    </td>
+                </tr>
+            );
+        });
+
+        return(
+            <table className="table table-hover" id="tabela">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Valor a Pagar</th>
+                        <th>Dt Venda</th>
+                        <th>Dt Vencimento</th>
+                        <th>Opções</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {lista}
+                </tbody>
+            </table>
+        )
+    }
+}
+
 //Ultimo item da lista é a paginação (pagina e ultima página), penultimo item é o cabeçalho da tabela
 function exibirRelatorioCrediario(titulo, lista, tipo, dtIni, dtFim, cliente) {
     let header = lista[lista.length-2];
     let pagination = lista[lista.length-1];
     lista.splice((lista.length-2), 2);
 
-    console.log(pagination);
+    // console.log(pagination);
     let elemento = (
         <div>
             <h3 className="titulo">{titulo}</h3>
             <button className="btn btn-outline-primary btn-sm" onClick={()=>{window.reload()}}>Voltar</button>
-            <TabelaGen lista={lista} header={header}/>
+            {(cliente !== '' && tipo === 'aPagar')? <TabelaCredAPgar lista={lista} header={header}/>: <TabelaGen lista={lista} header={header}/>}
             <PaginacaoCrediario tipo={tipo} dtIni={dtIni} dtFim={dtFim} cliente={cliente} pagina={pagination['pagina']} ultPagina={pagination['qtdPaginas']}/>
         </div>
     );
@@ -1169,6 +1223,79 @@ function exibirRelatorioCrediario(titulo, lista, tipo, dtIni, dtFim, cliente) {
     ReactDOM.render(
         elemento,
         document.getElementById("compReact")
+    )
+}
+
+class ModalItensCrediario extends React.Component{
+    constructor(props){
+        super(props);
+
+        this.formataValor = this.formataValor.bind(this);
+    }
+
+    formataValor(valor){
+        let x = parseFloat(valor).toFixed(2).replace('.', ',');
+        return x;
+    }
+
+    render(){
+        let lista = this.props.listaItens.map((item)=>{
+            // let quantidade = replace('.', ',', item['quantidade']);
+            return (
+                <tr key={item['id_item_venda']}>
+                    <td>{item['id_produto']}</td>
+                    <td>{item['nome']}</td>
+                    <td>{item['quantidade'].replace('.', ',')}</td>
+                    <td>{this.formataValor(item['valor_total'])}</td>
+                </tr>
+            )
+        })
+        return(
+            <div>
+                <div className="modal mostrar tamanhoModal" id="janelaFornecedor">
+                    <div className="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5>Itens da venda nº {this.props.listaItens[0].id_venda}</h5>
+                            </div>
+                            <div className="modal-body">
+                                <table className="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Código Item</th>
+                                            <th>Produto</th>
+                                            <th>Quantidade</th>
+                                            <th>Valor Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {lista}
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            <div className="modal-footer">
+                                <button onClick={fecharCompR} className="btn btn-secondary">Sair</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="modal-backdrop"></div>
+            </div>
+        )
+    }
+}
+
+function exibirModalItensCrediario(listaItens) {
+    let elemento = (
+        <div>
+            <ModalItensCrediario listaItens={listaItens}/>
+        </div>
+    )
+
+    ReactDOM.render(
+        elemento,
+        document.getElementById("compR")
     )
 }
 

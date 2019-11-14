@@ -515,6 +515,7 @@ function limpaTelaCaixa(tipo){
     $('#produto').focus();
 }
 
+//Remover aqui e na listagem do cadastro de cliente
 function receberCrediario(id){
     if (id === null){
         alert("Não foi informado cliente");
@@ -527,20 +528,20 @@ function receberCrediario(id){
     }
 }
 
-function baixarCrediario(id, valorComprado){
-    let valorPago = document.getElementById("valorPago").value;
-    valorPago = parseFloat(valorPago.replace(".", "").replace(",", "."));
-    if (valorPago > valorComprado){
-        alert("Valor pago não pode ser maior que valor comprado: "+valorPago+"\nValor Comprado: "+valorComprado);
-    }else if (valorPago === "" || valorPago === null || id === "" || id === null){
-        alert("Valor pago ou cliente não informado");
+function baixarCrediario(idCliente, idCrediario){
+    let especie = $("input[name='especie']:checked").val();
+    if (especie === undefined) {
+        exibirAlertaModal("Especie", "Para continuar selecione uma especie");
     }else{
-        $.post("DAO/baixarCrediario.php", {id:id, valorPago:valorPago}, function (data) {
+        $.post("DAO/baixarCrediario.php", {idCliente:idCliente, idCrediario:idCrediario, especie:especie}, function (data) {
+
             if (data === ""){
                 alert("Crediário recebido");
-                fecharCompReact();
+                fecharCompR();
+                window.reload();
             } else{
                 alert("Erro inesperado");
+                console.log(data);
             }
         })
     }
@@ -668,6 +669,36 @@ function consultaCrediarioDao(tipo, dtIni, dtFim, cliente, pagina){
             removerFiltro();
             exibirRelatorioCrediario("Relatório de Crediário", retorno, tipo, dtIni, dtFim, cliente);
         }
+    })
+}
+
+function receberCrediarioUnico(id_cliente, id_crediario){
+
+    // if (id === null){
+    //     alert("Não foi informado cliente");
+    // }else{
+    //     $.get("DAO/consultaCliente.php", "pesquisa="+id, function (data) {
+    //         let retorno = JSON.parse(data);
+    //
+    //         exibirModalCrediario(retorno);
+    //     })
+    // }
+
+    if (id_cliente === null || id_crediario === null){
+        alert("Recebimento não realizado")
+    } else{
+        $.get("DAO/consultaCrediarioCliente.php", {idCliente:id_cliente, idCrediario:id_crediario}, function(data){
+            let retorno = JSON.parse(data);
+
+            exibirModalCrediario(retorno);
+        })
+    }
+}
+
+function listarProdutosCrediario(idCrediario){
+    $.get("DAO/produtosCrediario.php", {idCrediario:idCrediario}, function (data) {
+        let retorno = JSON.parse(data);
+        exibirModalItensCrediario(retorno);
     })
 }
 

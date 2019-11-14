@@ -22,7 +22,8 @@ if (!empty($cliente)){
 
 if ($cliente == ""){
     if ($tipo == "todos"){
-        $sql = "SELECT 
+        $sql = "SELECT
+                C.id, 
                 L.nome,
                 CONCAT('R$ ',REPLACE(CAST(C.valor_a_pagar as decimal(15,2)), '.', ',')) AS valor_a_pagar,
                 CONCAT('R$ ',REPLACE(CAST(C.valor_pago as decimal(15,2)), '.', ',')) AS valor_pago,
@@ -35,6 +36,7 @@ if ($cliente == ""){
                 ORDER BY C.id_cliente, C.data_inclusao
                 LIMIT $itemInicial, 10";
 
+        $header['id'] = "Codigo";
         $header['nome'] = "Nome";
         $header['valor_a_pagar'] = "Valor a Pagar";
         $header['valor_pago'] = "Valor Pago";
@@ -65,6 +67,7 @@ if ($cliente == ""){
 
     }elseif ($tipo == "pago"){
         $sql = "SELECT 
+                C.id,
                 L.nome,
                 CONCAT('R$ ',REPLACE(CAST(C.valor_a_pagar as decimal(15,2)), '.', ',')) AS valor_a_pagar,
                 CONCAT('R$ ',REPLACE(CAST(C.valor_pago as decimal(15,2)), '.', ',')) AS valor_pago,
@@ -78,6 +81,7 @@ if ($cliente == ""){
                 ORDER BY C.id_cliente, C.data_inclusao
                 LIMIT $itemInicial, 10";
 
+        $header['id'] = "Codigo";
         $header['nome'] = "Nome";
         $header['valor_a_pagar'] = "Valor a Pagar";
         $header['valor_pago'] = "Valor Pago";
@@ -109,6 +113,7 @@ if ($cliente == ""){
 
     }elseif ($tipo == "aPagar"){
         $sql = "SELECT 
+                C.id,
                 L.nome,
                 CONCAT('R$ ',REPLACE(CAST(C.valor_a_pagar as decimal(15,2)), '.', ',')) AS valor_a_pagar,
                 DATE_FORMAT(C.data_inclusao, '%d/%m/%Y %H:%i:%S') AS data_inclusao,
@@ -120,6 +125,7 @@ if ($cliente == ""){
                 ORDER BY C.id_cliente, C.data_inclusao
                 LIMIT $itemInicial, 10";
 
+        $header['id'] = "Codigo";
         $header['nome'] = "Nome";
         $header['valor_a_pagar'] = "Valor a Pagar";
         $header['data_inclusao'] = "Dt Venda";
@@ -150,6 +156,7 @@ if ($cliente == ""){
 }else{
     if ($tipo == "todos"){
         $sql = "SELECT 
+                C.id,
                 L.nome,
                 CONCAT('R$ ',REPLACE(CAST(C.valor_a_pagar as decimal(15,2)), '.', ',')) AS valor_a_pagar,
                 CONCAT('R$ ',REPLACE(CAST(C.valor_pago as decimal(15,2)), '.', ',')) AS valor_pago,
@@ -163,6 +170,7 @@ if ($cliente == ""){
                 ORDER BY C.id_cliente, C.data_inclusao
                 LIMIT $itemInicial, 10";
 
+        $header['id'] = "Codigo";
         $header['nome'] = "Nome";
         $header['valor_a_pagar'] = "Valor a Pagar";
         $header['valor_pago'] = "Valor Pago";
@@ -193,6 +201,7 @@ if ($cliente == ""){
         $pagination['qtdPaginas'] = $quantidadePaginas;
     }elseif ($tipo == "pago"){
         $sql = "SELECT 
+                C.id,
                 L.nome,
                 CONCAT('R$ ',REPLACE(CAST(C.valor_a_pagar as decimal(15,2)), '.', ',')) AS valor_a_pagar,
                 CONCAT('R$ ',REPLACE(CAST(C.valor_pago as decimal(15,2)), '.', ',')) AS valor_pago,
@@ -207,6 +216,7 @@ if ($cliente == ""){
                 ORDER BY C.id_cliente, C.data_inclusao
                 LIMIT $itemInicial, 10";
 
+        $header['id'] = "Codigo";
         $header['nome'] = "Nome";
         $header['valor_a_pagar'] = "Valor a Pagar";
         $header['valor_pago'] = "Valor Pago";
@@ -237,7 +247,9 @@ if ($cliente == ""){
         $pagination['pagina'] = intval($pagina);
         $pagination['qtdPaginas'] = $quantidadePaginas;
     }elseif ($tipo == "aPagar"){
-        $sql = "SELECT 
+        $sql = "SELECT
+                L.id as id_cliente,
+                C.id as id_crediario, 
                 L.nome,
                 CONCAT('R$ ',REPLACE(CAST(C.valor_a_pagar as decimal(15,2)), '.', ',')) AS valor_a_pagar,
                 DATE_FORMAT(C.data_inclusao, '%d/%m/%Y %H:%i:%S') AS data_inclusao,

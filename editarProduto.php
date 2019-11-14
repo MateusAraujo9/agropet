@@ -90,6 +90,14 @@ $fornecedorP = isset($_POST['fornecedor'])?$_POST['fornecedor']:"";
 $vlComP = isset($_POST['vlComp'])?$_POST['vlComp']:"";
 $vlVenP = isset($_POST['vlVen'])?$_POST['vlVen']:"";
 
+//tratamento de valores
+$qtdP = str_replace('.', '', $qtdP);
+$qtdP = str_replace(',', '.', $qtdP);
+$vlComP = str_replace('.', '', $vlComP);
+$vlComP = str_replace(',', '.', $vlComP);
+$vlVenP = str_replace('.', '', $vlVenP);
+$vlVenP = str_replace(',', '.', $vlVenP);
+
 //Busca fornecedor
 $sqlF = "SELECT id FROM fornecedor WHERE nome = '$fornecedorP'";
 
@@ -113,6 +121,8 @@ if (!empty($idProdutoPost)){
              valor_compra = '$vlComP',
              valor_venda = '$vlVenP'
              WHERE id = '$idProdutoPost'";
+
+    //echo "<br><br><hr><hr>".$sqlU."<br><br><hr>";
 
     try{
         $pdo->query($sqlU);
@@ -243,7 +253,7 @@ if (!empty($idProdutoPost)){
                     <label class="col-form-label" for="fornecedor">Fornecedor</label>
                     <div class="form-group">
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="fornecedor" name="fornecedor" value="<?php echo $sqlFornecedor['nome']?>">
+                            <input type="text" class="form-control" id="fornecedor" name="fornecedor" onblur="pesquisaFornecedor()" value="<?php echo $sqlFornecedor['nome']?>">
                             <div class="input-group-append">
                                 <span class="input-group-text button" onclick="pesquisaFornecedor()"><img src="resourse/imagens/lupa.png" alt="lupa" title="Pesquisar"></span>
                             </div>
