@@ -674,16 +674,6 @@ function consultaCrediarioDao(tipo, dtIni, dtFim, cliente, pagina){
 
 function receberCrediarioUnico(id_cliente, id_crediario){
 
-    // if (id === null){
-    //     alert("Não foi informado cliente");
-    // }else{
-    //     $.get("DAO/consultaCliente.php", "pesquisa="+id, function (data) {
-    //         let retorno = JSON.parse(data);
-    //
-    //         exibirModalCrediario(retorno);
-    //     })
-    // }
-
     if (id_cliente === null || id_crediario === null){
         alert("Recebimento não realizado")
     } else{
@@ -700,6 +690,30 @@ function listarProdutosCrediario(idCrediario){
         let retorno = JSON.parse(data);
         exibirModalItensCrediario(retorno);
     })
+}
+
+function recebimentoParcial(cliente, dtIni, dtFim){
+    let valor_pago = $('#vlPago')[0].value;
+    valor_pago = valor_pago.toString().replace(".", "").replace(",", ".");
+    let especie = $("input[name='especie']:checked").val();
+    if (valor_pago === ""){
+        exibirAlertaModal("especie", "Informe o valor para pagar");
+    }else if (especie === undefined){
+        exibirAlertaModal("especie", "Para continuar selecione uma espécie");
+    }else{
+        //vai enviar dados para backend
+        console.log("Vai receber crediário");
+
+        $.post("DAO/recebimentoParcial.php", {cliente:cliente, dtIni:dtIni, dtFim:dtFim, especie:especie, vlReceb:valor_pago}, function (data) {
+            if (data === "") {
+                alert("Valor recebido");
+                fecharCompR();
+                $('#menuReceb')[0].value = "";
+            }
+            reload();
+        })
+    }
+    // alert(cliente+"\n"+dtIni+"\n"+dtFim+"\n"+valor_pago+"\n"+especie);
 }
 
 //Mascaras jquery

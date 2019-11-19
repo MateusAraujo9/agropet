@@ -42,10 +42,27 @@ if ($return){
     $sqlInsertMov = "INSERT INTO movimentacao_caixa (id_crediario, id_caixa, tipo, id_especie) 
                      VALUES ($idCrediario, $idCaixa, 'T', $idEspecie)";
 
-//    echo $sqlInsertMov;
+
     try{
         $pdo->query($sqlInsertMov);
     }catch (PDOException $e){
         echo "Erro de conexão: ".$e->getMessage();
+    }
+
+    //Pegar valor do crediario para debitar do valor comprado
+    $sqlValorCrediario = "SELECT valor_a_pagar FROM crediario WHERE id = $idCrediario";
+    try{
+        $valor_a_pagar = $pdo->query($sqlValorCrediario)->fetch()['valor_a_pagar'];
+    }catch (PDOException $e){
+        $e->getMessage();
+    }
+
+    //update valor comprado
+    $sqlValorComprado = "UPDATE cliente SET valor_comprado = valor_comprado - $valor_a_pagar WHERE id = $idCliente";
+
+    try{
+        $pdo->query($sqlValorComprado);
+    }catch (PDOException $e){
+        $e->getMessage();
     }
 }

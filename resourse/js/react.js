@@ -1204,6 +1204,19 @@ class TabelaCredAPgar extends React.Component{
     }
 }
 
+class SelectRecebParcial extends React.Component {
+    render(){
+        return(
+            <div className="form-group opcoesCaixa">
+                <select name="menuReceb" className="custom-select" id="menuReceb">
+                    <option value=""></option>
+                    <option value="recebParcial" onClick={()=>{exibirModalRecebimentoParcial(this.props.cliente, this.props.dtIni, this.props.dtFim)}}>Pagamento Parcial</option>
+                </select>
+            </div>
+        )
+    }
+}
+
 //Ultimo item da lista é a paginação (pagina e ultima página), penultimo item é o cabeçalho da tabela
 function exibirRelatorioCrediario(titulo, lista, tipo, dtIni, dtFim, cliente) {
     let header = lista[lista.length-2];
@@ -1213,7 +1226,10 @@ function exibirRelatorioCrediario(titulo, lista, tipo, dtIni, dtFim, cliente) {
     // console.log(pagination);
     let elemento = (
         <div>
-            <h3 className="titulo">{titulo}</h3>
+            <div className="titleCaixa">
+                <h3 className="titulo">{titulo}</h3>
+                {(cliente !== '' && tipo === 'aPagar')? <SelectRecebParcial cliente={cliente} dtIni={dtIni} dtFim={dtFim}/>:null}
+            </div>
             <button className="btn btn-outline-primary btn-sm" onClick={()=>{window.reload()}}>Voltar</button>
             {(cliente !== '' && tipo === 'aPagar')? <TabelaCredAPgar lista={lista} header={header}/>: <TabelaGen lista={lista} header={header}/>}
             <PaginacaoCrediario tipo={tipo} dtIni={dtIni} dtFim={dtFim} cliente={cliente} pagina={pagination['pagina']} ultPagina={pagination['qtdPaginas']}/>
@@ -1290,6 +1306,67 @@ function exibirModalItensCrediario(listaItens) {
     let elemento = (
         <div>
             <ModalItensCrediario listaItens={listaItens}/>
+        </div>
+    )
+
+    ReactDOM.render(
+        elemento,
+        document.getElementById("compR")
+    )
+}
+
+class ModalRecebimentoParcial extends React.Component{
+    render(){
+        return (
+            <div>
+                <div className="modal mostrar tamanhoModal" id="janelaFornecedor">
+                    <div className="modal-dialog modal-dialog-centered modal-md">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5>Recebimento de Crediário Parcial</h5>
+                            </div>
+                            <div className="modal-body">
+                                <div id="pesquisaReact"></div>
+                                <div className="form-group">
+                                    <label htmlFor="vlPago" className="col-form-label">Valor do Pagamento</label>
+                                    <input type="text" className="form-control valor" maxLength="9" id="vlPago"/>
+                                </div>
+                                <span>Forma de Pagamento</span>
+                                <div className="form-group especieLinha">
+                                    <div className="custom-control custom-radio especieItem">
+                                        <input type="radio" id="dinheiro" name="especie"
+                                               className="custom-control-input" value="1"/>
+                                        <label className="custom-control-label" htmlFor="dinheiro">Dinheiro</label>
+                                    </div>
+                                    <div className="custom-control custom-radio especieItem">
+                                        <input type="radio" id="debito" name="especie"
+                                               className="custom-control-input" value="2"/>
+                                        <label className="custom-control-label" htmlFor="debito">Débito</label>
+                                    </div>
+                                    <div className="custom-control custom-radio especieItem">
+                                        <input type="radio" id="credito" name="especie"
+                                               className="custom-control-input" value="4"/>
+                                        <label className="custom-control-label" htmlFor="credito">Crédito</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="modal-footer">
+                                <button  onClick={()=>{recebimentoParcial(this.props.cliente, this.props.dtIni, this.props.dtFim)}} className="btn btn-success">Receber</button>
+                                <button onClick={fecharCompR} className="btn btn-secondary">Sair</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="modal-backdrop"></div>
+            </div>
+        )
+    }
+}
+
+function exibirModalRecebimentoParcial(cliente, dataInicio, dataFim){
+    let elemento = (
+        <div>
+            <ModalRecebimentoParcial cliente={cliente} dtIni={dataInicio} dtFim={dataFim}/>
         </div>
     )
 

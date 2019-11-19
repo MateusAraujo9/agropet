@@ -103,7 +103,6 @@ if ($sqlQuantCli['qtd'] > 0){
         echo "    <td>".$cl['email']."</td>";
         echo "    <td>";
         echo "      <img src=\"resourse/imagens/editar.png\" alt=\"editarUsuario\" title=\"Editar\" class=\"btnListUser\" onclick=\"window.location='editarCliente.php?cliente=".$cl['id']."'\">";
-        echo "      <img src=\"resourse/imagens/cifrao.png\" alt=\"receberCrediario\" title=\"Receber Crediario\" class=\"btnListUser\" onclick=\"receberCrediario('".$cl['id']."')\"";
         echo "    </td>";
         echo "</tr>";
     }
