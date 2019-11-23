@@ -39,6 +39,7 @@ app.config(function ($routeProvider) {
         .when("/entradaEstoque", {templateUrl: "entradaEstoque.html"})
         .when("/rVendas", {templateUrl: "relatorioVendas.html"})
         .when("/rCrediario", {templateUrl: "relatorioCrediario.html"})
+        .when("/rCaixa", {templateUrl: "relatorioCaixa.html"})
 });
 
 app.controller("meuAppCtrl", function ($scope, $http) {
@@ -715,6 +716,52 @@ function recebimentoParcial(cliente, dtIni, dtFim){
     }
     // alert(cliente+"\n"+dtIni+"\n"+dtFim+"\n"+valor_pago+"\n"+especie);
 }
+
+function buscarListaCaixa(){
+    let dtIni = document.getElementById('dtIni').value;
+    let dtFim = document.getElementById('dtFim').value;
+
+    if (dtIni == "" || dtFim == ""){
+        console.log("Não vai buscar lista");
+    } else{
+        $.get("DAO/listaCaixa.php", {dtIni:dtIni, dtFim:dtFim}, function (data) {
+            if (data == ""){
+                alert("Nenhum caixa no periodo");
+            } else{
+                let retorno = JSON.parse(data);
+                exibirSelectCaixa(retorno);
+            }
+
+        })
+    }
+}
+
+function buscaRelatorioCaixa(){
+    let valorSelect = $("#selectCaixaList").val();
+    if (valorSelect == -1 || valorSelect == undefined){
+        alert("Selecione o Caixa!");
+    }else{
+        $.get("DAO/buscaRelatorioCaixa.php", {ncaixa:valorSelect}, function (data) {
+            /*
+            No array os retornos são os seguintes:
+            0 = Informações do caixa (numero, data de abertura e fechamento, valor de abertura em cedula e moeda)
+            1 = Valores por especie
+            2 = Crediario recebido
+            3 = Ticket médio
+            4 = Quantidade de clientes atendidos
+            5 = Valor total vendido
+            6 = Valor de desconto
+             */
+            let retorno = JSON.parse(data);
+            let container = $(".containerCenter")[0];
+            container.className = "containerCenter2";
+            console.log(retorno);
+            removerFiltro();
+            exibirRelatorioCaixa(retorno);
+        })
+    }
+}
+
 
 //Mascaras jquery
 $('.valor').mask('#.##0,00', {reverse: true});

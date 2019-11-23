@@ -9,7 +9,7 @@
                     <label class="col-form-label" for="fornecedor">*Fornecedor</label>
                     <div class="form-group">
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="fornecedor" name="fornecedor">
+                            <input type="text" class="form-control" id="fornecedor" name="fornecedor" onblur="pesquisaFornecedor()">
                             <div class="input-group-append">
                                 <span class="input-group-text button" onclick="pesquisaFornecedor()"><img src="resourse/imagens/lupa.png" alt="lupa" title="Pesquisar"></span>
                             </div>
@@ -26,7 +26,7 @@
                     <label class="col-form-label" for="produto">*Produto - <input class="form-control campId" id="idProduto" name="idProduto" type="text" readonly=""></label>
                     <div class="form-group">
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="produto" name="produto">
+                            <input type="text" class="form-control" id="produto" name="produto" onblur="entradaProduto(0)">
                             <div class="input-group-append">
                                 <span class="input-group-text button" onclick="entradaProduto(0)"><img src="resourse/imagens/lupa.png" alt="lupa" title="Pesquisar"></span>
                             </div>

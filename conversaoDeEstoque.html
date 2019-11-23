@@ -8,7 +8,7 @@
                     <label class="col-form-label" for="produtoOrigem">Produto Origem - <input class="form-control campId" id="idProdutoOrigem" name="idProdutoOrigem" type="text" readonly=""></label>
                     <div class="form-group">
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="produtoOrigem" name="produtoOrigem">
+                            <input type="text" class="form-control" id="produtoOrigem" name="produtoOrigem" onblur="pesquisaProdutoConvert(0, 'origem')">
                             <div class="input-group-append">
                                 <span class="input-group-text button" onclick="pesquisaProdutoConvert(0, 'origem')"><img src="resourse/imagens/lupa.png" alt="lupa" title="Pesquisar"></span>
                             </div>
@@ -32,7 +32,7 @@
                     <label class="col-form-label" for="produtoDestino">Produto Destino - <input class="form-control campId" id="idProdutoDestino" name="idProdutoDestino" type="text" readonly=""></label>
                     <div class="form-group">
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="produtoDestino" name="produtoDestino">
+                            <input type="text" class="form-control" id="produtoDestino" name="produtoDestino" onblur="pesquisaProdutoConvert(0, 'destino')">
                             <div class="input-group-append">
                                 <span class="input-group-text button" onclick="pesquisaProdutoConvert(0, 'destino')"><img src="resourse/imagens/lupa.png" alt="lupa" title="Pesquisar"></span>
                             </div>

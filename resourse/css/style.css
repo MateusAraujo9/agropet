@@ -224,3 +224,9 @@
     display: flex;
     flex-direction: row;
 }
+#selectCaixa{
+    margin-left: 0px;
+}
+.space{
+    margin-top: 50px;
+}

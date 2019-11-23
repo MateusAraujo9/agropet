@@ -1376,6 +1376,163 @@ function exibirModalRecebimentoParcial(cliente, dataInicio, dataFim){
     )
 }
 
+class SelectCaixa extends React.Component{
+    render(){
+        let options = this.props.lista.map((item)=>{
+            return (<option value={item.id} key={item.id}>{item.id+" - "+item.data_abertura}</option>)
+        });
+        return(
+            <select className="custom-select col-md-5" id="selectCaixaList">
+                <option value="-1">Escolha o caixa</option>
+                {options}
+            </select>
+        )
+    }
+}
+
+function exibirSelectCaixa(lista){
+    let elemento = (
+        <SelectCaixa lista={lista} />
+    )
+
+    ReactDOM.render(
+        elemento,
+        document.getElementById("selectCaixa")
+    )
+}
+
+class TBodyEspecie extends React.Component{
+    render(){
+        let count = 0;
+        let lista = "";
+        if (Array.isArray(this.props.listaEspecie)){
+            lista = this.props.listaEspecie.map((item)=>{
+                count++;
+                return (
+                    <tr key={count}>
+                        <td>{item['nome']}</td>
+                        <td>{item['total_especie']}</td>
+                    </tr>
+                )
+            })
+        }
+        return(
+            <tbody>
+            {lista}
+            </tbody>
+        )
+    }
+}
+
+class TBodyCrediario extends React.Component{
+    render(){
+        let count =0;
+        let lista = "";
+        if (Array.isArray(this.props.listaCred)){
+            lista = this.props.listaCred.map((item)=>{
+                count++
+                return(
+                    <tr key={count}>
+                        <td>{item['descricao']}</td>
+                        <td>{item['vl_pago']}</td>
+                    </tr>
+                )
+            })
+        }
+
+        return(
+            <tbody>
+            {lista}
+            </tbody>
+        )
+    }
+}
+
+function exibirRelatorioCaixa(dados) {
+    let elemento = (
+        <div>
+            <button className="btn btn-sm btn-outline-primary" onClick={reload}>Voltar</button>
+            <h3>Informações do Caixa</h3>
+            <table className="table table-hover">
+                <thead>
+                <tr className="table-primary">
+                    <th>Nº Caixa</th>
+                    <th>Data Abertura</th>
+                    <th>Data Fechamento</th>
+                    <th>Vl Abertura Cédula</th>
+                    <th>Vl Abertura Moeda</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>{dados[0].id}</th>
+                        <th>{dados[0].dt_abertura}</th>
+                        <th>{dados[0].dt_fechamento}</th>
+                        <th>{dados[0].abertura_cedula}</th>
+                        <th>{dados[0].abertura_moeda}</th>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Total por Espécie</h3>
+            <table className="table table-hover">
+                <thead>
+                <tr className="table-primary">
+                    <th>Espécie</th>
+                    <th>Valor</th>
+                </tr>
+                </thead>
+                <TBodyEspecie listaEspecie={dados[1]}/>
+            </table>
+
+            <h3>Crediário Recebido</h3>
+            <table className="table table-hover">
+                <thead>
+                <tr className="table-primary">
+                    <th>Descrição</th>
+                    <th>Valor Pago</th>
+                </tr>
+                </thead>
+                <TBodyCrediario listaCred={dados[2]}/>
+            </table>
+
+            <h3>Informações Gerenciais</h3>
+            <table className="table table-hover">
+                <thead>
+                <tr className="table-primary">
+                    <th>Descrição</th>
+                    <th>Valor</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>Ticket Médio</th>
+                        <td>{dados[3].ticket_medio}</td>
+                    </tr>
+                    <tr>
+                        <th>Quantidade de Clientes</th>
+                        <td>{dados[4].qtdCli}</td>
+                    </tr>
+                    <tr>
+                        <th>Valor do Caixa (vendido + abertura)</th>
+                        <td>{dados[5].vl_total}</td>
+                    </tr>
+                    <tr>
+                        <th>Desconto Fornecido</th>
+                        <td>{dados[6].valor_desconto}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div className="space"></div>
+        </div>
+    )
+
+    ReactDOM.render(
+        elemento,
+        document.getElementById("compReact")
+    )
+}
+
 function setProdutoAjuste(id) {
     fecharCompReact();
     ajustePreco(id);

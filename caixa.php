@@ -83,6 +83,7 @@ try{
                 <ul id="dropRelatorio" class="esconde">
                     <a href="/#!rVendas" class="linkMenu"><li class="itemDrop">Vendas</li></a>
                     <a href="/#!rCrediario" class="linkMenu"><li class="itemDrop">Crediário</li></a>
+                    <a href="/#!rCaixa" class="linkMenu"><li class="itemDrop">Caixa</li></a>
                 </ul>
             </li>
         </ul>
@@ -93,7 +94,7 @@ try{
 
             $usuario = $sql->fetch();
 
-            echo "<p class='userLogado'>Bem vindo(a), ".$usuario['nome']."</p><a class='btnSair' href='logout.php'>sair</a>";
+            echo "<p class='userLogado'>Bem vindo(a), ".$usuario['nome']."</p><a class='btn btn-outline-light btn-sm' href='logout.php'>sair</a>";
         }
 
 
@@ -110,18 +111,22 @@ try{
             }
         });
 
+        function acaoProduto(){
+            let caixa;
+            $.when(consultaCaixaAberto()).done(caixa = statusCaixa);
+            if (caixa){
+                let pesquisa = $('#produto')[0].value;
+                pesquisaProdutoCaixa(pesquisa);
+            } else{
+                alert("Caixa Fechado");
+                console.log(caixa);
+            }
+        }
+
         $(document).keypress(function(e) {
             if (e.which === 13) {
                 if (e.target.getAttribute("id") === "produto") {
-                    let caixa;
-                    $.when(consultaCaixaAberto()).done(caixa = statusCaixa);
-                    if (caixa){
-                        let pesquisa = $('#produto')[0].value;
-                        pesquisaProdutoCaixa(pesquisa);
-                    } else{
-                        alert("Caixa Fechado");
-                        console.log(caixa);
-                    }
+                    acaoProduto();
                 }else if(e.target.getAttribute("id") === "quantidade" || e.target.getAttribute("id") === "vlUnit"){
                     let quant = $('#quantidade')[0].value.replace(",", ".");
                     if (quant !== "" && quant != null && quant > 0){
@@ -185,7 +190,7 @@ try{
             </div>
         </div>
         <div class="form-group">
-            <input class="form-control form-control-lg" type="text" placeholder="Id/CEAN/Nome Produto" id="produto">
+            <input class="form-control form-control-lg" type="text" placeholder="Id/CEAN/Nome Produto" id="produto" onblur="acaoProduto()">
         </div>
         <div class="corpoCaixa">
             <div class="componentR" id="componentR"></div>
