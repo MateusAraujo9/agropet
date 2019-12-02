@@ -548,7 +548,7 @@ function baixarCrediario(idCliente, idCrediario){
     }
 }
 
-function consultarVendas(){
+function consultarVendas(pagina){
     let dtIni = $('#dtIni')[0].value;
     let dtFim = $('#dtFim')[0].value;
     let soCliente = document.getElementById("soCliente").checked;
@@ -559,32 +559,22 @@ function consultarVendas(){
     } else if(dtFim < dtIni){
         console.log("Data final não pode ser anterior a data inicial");
     }else{
-        $.post("DAO/consultaVendas.php", {dtIni:dtIni, dtFim:dtFim, soCliente:soCliente, cliente:cliente, porItem:porItem}, function (data) {
-            let retorno = JSON.parse(data);
-
-            if(cliente !== ""){
-                if (porItem){
-                    removerFiltro();
-                    exibirRelatorioGen("clientePorItem", retorno);
-                } else{
-                    removerFiltro();
-                    exibirRelatorioGen("clientePorNota", retorno);
-                }
-            }else if(soCliente){
-                if (porItem){
-                    console.log(retorno);
-                } else{
-                    console.log(retorno);
-                }
-            }else{
-                if (porItem){
-                    console.log(retorno);
-                } else{
-                    console.log(retorno);
-                }
-            }
-        })
+        consultaVendasDao(dtIni, dtFim, soCliente, cliente, porItem, pagina);
     }
+}
+
+function consultaVendasDao(dtIni, dtFim, soCliente, cliente, porItem, pagina) {
+    $.get("DAO/consultaVendas.php", {dtIni:dtIni, dtFim:dtFim, soCliente:soCliente, cliente:cliente, porItem:porItem, pagina:pagina}, function (data) {
+
+        let retorno = "";
+        if(isJson(data)){
+            retorno = JSON.parse(data);
+            removerFiltro();
+            exebirRelatorioVendas("Relatório de Vendas", retorno, porItem, cliente, soCliente, dtIni, dtFim);
+        }else{
+            alert("Não retornou nenhuma venda.");
+        }
+    })
 }
 
 function removerFiltro(){
@@ -688,8 +678,12 @@ function receberCrediarioUnico(id_cliente, id_crediario){
 
 function listarProdutosCrediario(idCrediario){
     $.get("DAO/produtosCrediario.php", {idCrediario:idCrediario}, function (data) {
-        let retorno = JSON.parse(data);
-        exibirModalItensCrediario(retorno);
+        if(isJson(data)){
+            let retorno = JSON.parse(data);
+            exibirModalItensCrediario(retorno);
+        }else if (data === "parcial") {
+            alert("Crediário parcial");
+        }
     })
 }
 
@@ -760,6 +754,28 @@ function buscaRelatorioCaixa(){
             exibirRelatorioCaixa(retorno);
         })
     }
+}
+
+function listarProdutosVenda(idVenda){
+    $.get("DAO/produtosVenda.php", {idVenda:idVenda}, function (data) {
+        if(isJson(data)){
+            let retorno = JSON.parse(data);
+            exibirModalItensCrediario(retorno);
+        }else if (data === "parcial") {
+            alert("Crediário parcial");
+        }
+    })
+}
+
+
+function isJson(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+
+    return true;
 }
 
 

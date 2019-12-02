@@ -1049,6 +1049,14 @@ class LinhaGen extends React.Component{
         let lista;
         let chave = Object.keys(this.props.header);
         let cont = 0;
+        let titulo = this.props.titulo;
+        let eVenda = false;
+        if (titulo === "Relatório de Vendas"){
+            if (!this.props.porItem){
+                eVenda = true;
+            }
+        }
+
         lista = chave.map((keyC)=>{
             cont++;
             if (keyC === 'id'){
@@ -1062,7 +1070,12 @@ class LinhaGen extends React.Component{
         return (
             <tr>
                 {lista}
-                <td><img src="resourse/imagens/list-item.png" alt="Ver Itens" title="Ver Itens" className="btnListUser" onClick={()=>{listarProdutosCrediario(this.props.item['id'])}}/></td>
+                {titulo==="Relatório de Crediário" &&
+                    <td><img src="resourse/imagens/list-item.png" alt="Ver Itens" title="Ver Itens" className="btnListUser" onClick={()=>{listarProdutosCrediario(this.props.item['id'])}}/></td>
+                }
+                {eVenda &&
+                    <td><img src="resourse/imagens/list-item.png" alt="Ver Itens" title="Ver Itens" className="btnListUser" onClick={()=>{listarProdutosVenda(this.props.item['nVenda'])}}/></td>
+                }
             </tr>
         );
     }
@@ -1078,6 +1091,8 @@ class TbBody extends React.Component{
                     key={cont}
                     item={item}
                     header={this.props.header}
+                    titulo={this.props.titulo}
+                    porItem={this.props.porItem}
                 />
             );
         });
@@ -1110,7 +1125,11 @@ class TbHeader extends React.Component{
             <thead>
                 <tr>
                     {lista}
-                    <th scope="col">Opção</th>
+                    {
+                        !this.props.porItem &&
+                        <th scope="col">Opção</th>
+                    }
+
                 </tr>
             </thead>
         )
@@ -1119,10 +1138,29 @@ class TbHeader extends React.Component{
 
 class TabelaGen extends React.Component{
     render(){
+        let t = this.props.titulo;
         return(
             <table className="table table-hover" id="tabela">
-                <TbHeader header={this.props.header}/>
-                <TbBody header={this.props.header} lista={this.props.lista}/>
+
+                {
+                    t === "Relatório de Crediário" &&
+                    <TbHeader header={this.props.header} porItem={false}/>
+                }
+                {
+                    t === "Relatório de Vendas" &&
+                    <TbHeader header={this.props.header} porItem={this.props.porItem}/>
+                }
+
+
+                {
+                    t === "Relatório de Crediário" &&
+                        <TbBody header={this.props.header} lista={this.props.lista} titulo={this.props.titulo} porItem={false}/>
+                }
+                {
+                    t === "Relatório de Vendas" &&
+                        <TbBody header={this.props.header} lista={this.props.lista} titulo={this.props.titulo} porItem={this.props.porItem}/>
+                }
+
             </table>
         )
     }
@@ -1231,7 +1269,7 @@ function exibirRelatorioCrediario(titulo, lista, tipo, dtIni, dtFim, cliente) {
                 {(cliente !== '' && tipo === 'aPagar')? <SelectRecebParcial cliente={cliente} dtIni={dtIni} dtFim={dtFim}/>:null}
             </div>
             <button className="btn btn-outline-primary btn-sm" onClick={()=>{window.reload()}}>Voltar</button>
-            {(cliente !== '' && tipo === 'aPagar')? <TabelaCredAPgar lista={lista} header={header}/>: <TabelaGen lista={lista} header={header}/>}
+            {(cliente !== '' && tipo === 'aPagar')? <TabelaCredAPgar lista={lista} header={header}/>: <TabelaGen lista={lista} header={header} titulo={titulo}/>}
             <PaginacaoCrediario tipo={tipo} dtIni={dtIni} dtFim={dtFim} cliente={cliente} pagina={pagination['pagina']} ultPagina={pagination['qtdPaginas']}/>
         </div>
     );
@@ -1531,6 +1569,63 @@ function exibirRelatorioCaixa(dados) {
         elemento,
         document.getElementById("compReact")
     )
+}
+
+class PaginacaoVendas extends React.Component{
+    render(){
+        let pagAnterior = this.props.pagina-1;
+        let pagina = this.props.pagina;
+        let pagSeguinte = this.props.pagina+1;
+        let ultPagina = this.props.ultPagina;
+
+        let proxP = "";
+        if (this.props.ultPagina > 1 && this.props.pagina < this.props.ultPagina){
+            proxP = (
+                <li>
+                    <a className="page-link" href="javascript:;" onClick={()=>{consultaVendasDao(this.props.dtIni, this.props.dtFim, this.props.soCliente, this.props.cliente, this.props.porItem, pagSeguinte)}}>{pagSeguinte}</a>
+                </li>
+            );
+        }
+        return(
+            <ul className={"pagination"}>
+                <li className="page-item">
+                    <a className="page-link" href="javascript:;" onClick={()=>{consultaVendasDao(this.props.dtIni, this.props.dtFim, this.props.soCliente, this.props.cliente, this.props.porItem, 1)}}>&laquo;</a>
+                </li>
+                {this.props.pagina>1?
+                    <li className="page-item">
+                        <a className="page-link" href="javascript:;" onClick={()=>{consultaVendasDao(this.props.dtIni, this.props.dtFim, this.props.soCliente, this.props.cliente, this.props.porItem, pagAnterior)}}>{pagAnterior}</a>
+                    </li>:""
+                }
+                <li className="page-item active">
+                    <a className="page-link" href="javascript:;" onClick={()=>{consultaVendasDao(this.props.dtIni, this.props.dtFim, this.props.soCliente, this.props.cliente, this.props.porItem, pagina)}}>{pagina}</a>
+                </li>
+                {proxP}
+                <li className="page-item">
+                    <a className="page-link" href="javascript:;"  onClick={()=>{consultaVendasDao(this.props.dtIni, this.props.dtFim, this.props.soCliente, this.props.cliente, this.props.porItem, ultPagina)}}>&raquo;</a>
+                </li>
+            </ul>
+        )
+    }
+}
+
+function exebirRelatorioVendas(titulo, lista, porItem, cliente, soCliente, dtIni, dtFim) {
+    let header = lista[lista.length-2];
+    let pagination = lista[lista.length-1];
+    lista.splice((lista.length-2), 2);
+
+    let elemento = (
+        <div>
+            <h3 className="titulo">{titulo}</h3>
+            <button className="btn btn-outline-primary btn-sm" onClick={()=>{window.reload()}}>Voltar</button>
+            <TabelaGen lista={lista} header={header} titulo={titulo} porItem={porItem}/>
+            <PaginacaoVendas porItem={porItem} cliente={cliente} soCliente={soCliente} dtIni={dtIni} dtFim={dtFim} pagina={pagination['pagina']} ultPagina={pagination['qtdPaginas']}/>
+        </div>
+    )
+
+    ReactDOM.render(
+        elemento,
+        document.getElementById("compReact")
+    );
 }
 
 function setProdutoAjuste(id) {
