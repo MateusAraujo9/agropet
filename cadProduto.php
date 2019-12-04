@@ -51,7 +51,7 @@
         <div id="compReact"></div>
         <!--Alert fim-->
         <h3 class="titulo">Novo Produto</h3>
-        <form action="DAO/cadProduto.php" method="post">
+        <form method="post" onsubmit="return false;">
             <div class="form-group">
                 <label class="col-form-label" for="nome">Nome</label>
                 <input type="text" class="form-control" id="nome" name="nome">
@@ -142,7 +142,7 @@
 
                 </div>
             </div>
-            <input type="submit" value="Cadastrar" class="btn btn-primary btn-lg btn-block btnCadastro">
+            <input type="submit" value="Cadastrar" class="btn btn-primary btn-lg btn-block btnCadastro" onclick="cadastrarProduto()">
         </form>
     </div>
     <script type="text/javascript">

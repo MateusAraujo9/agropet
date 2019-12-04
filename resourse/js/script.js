@@ -767,6 +767,144 @@ function listarProdutosVenda(idVenda){
     })
 }
 
+function cadastrarCliente() {
+    //Buscando dados
+    let nome = $("#nome")[0].value;
+    let cpf = $("#cpf")[0].value;
+    let dtNasc = $("#dtNasc")[0].value;
+    let estado = $("#estado")[0].value;
+    let cidade = $("#cidade")[0].value;
+    let bairro = $("#bairro")[0].value;
+    let rua = $("#rua")[0].value;
+    let numero = $("#numero")[0].value;
+    let cep = $("#cep")[0].value;
+    let tel = $("#tel")[0].value;
+    let email = $("#email")[0].value;
+
+    if (dtNasc === ""){
+        dtNasc = "2000-01-01";
+    }
+
+    if (nome === ""){
+        alert("Informe o nome do cliente");
+    } else{
+        $.post("DAO/cadCliente.php", {nome:nome, cpf:cpf, dtNasc:dtNasc, estado:estado, cidade:cidade, bairro:bairro, rua:rua, cep:cep, numero:numero, tel:tel, email:email}, function (data) {
+            if (data === "erro nome"){
+                alert("Nome inválido");
+            } else if (data !== ""){
+                alert("Erro inesperado, revise os campos do cadastro.");
+            } else{
+                alert("Cliente cadastrado com sucesso");
+                window.location.href = "/#!/listCliente";
+            }
+
+        })
+    }
+}
+
+function cadastrarProduto() {
+    //Buscando dados
+    let nome = $("#nome")[0].value;
+    let barra = $("#barra")[0].value;
+    let qtd = $("#qtd")[0].value;
+    let unidade = $("#unidade")[0].value;
+    let grupo = $("#grupo")[0].value;
+    let classe = $("#classe")[0].value;
+    let subCl = $("#subCl")[0].value;
+    let fornecedor = $("#fornecedor")[0].value;
+    let vlComp = $("#vlComp")[0].value;
+    let vlVen = $("#vlVen")[0].value;
+
+
+    if (nome === ""){
+        alert("Informe o nome do produto");
+    } else if (vlVen === ""){
+        alert("Informe o valor de venda do produto");
+    }else{
+        $.post("DAO/cadProduto.php", {nome:nome, barra:barra, qtd:qtd, unidade:unidade, grupo:grupo, classe:classe, subCl:subCl, fornecedor:fornecedor, vlComp:vlComp, vlVen:vlVen}, function (data) {
+            if (data !== ""){
+                alert("Erro inesperado, verifique os campos do cadastro!");
+                console.log(data);
+            } else{
+                alert("Produto cadastrado com sucesso!");
+                window.location.href = "/#!/listProduto";
+            }
+        })
+    }
+}
+
+function cadastrarGrupo() {
+    let nome = $("#nome")[0].value;
+    if (nome === ""){
+        alert("Informe o nome.");
+    }else{
+        $.post("DAO/cadGrupo.php", {nome:nome}, function (data) {
+            if (data !== ""){
+                alert("Erro inesperado, revise o campo ou recarregue a página.");
+            } else{
+                alert("Grupo cadastrado com sucesso");
+                window.location.href = "/#!/listGrupo";
+                reload();
+            }
+        })
+    }
+}
+
+function cadastrarClasse() {
+    let nome = $("#nome")[0].value;
+    if (nome === ""){
+        alert("Informe o nome.");
+    }else{
+        $.post("DAO/cadClasse.php", {nome:nome}, function (data) {
+            if (data !== ""){
+                alert("Erro inesperado, revise o campo ou recarregue a página.");
+            } else{
+                alert("Classe cadastrada com sucesso");
+                window.location.href = "/#!/listClasse";
+                reload();
+            }
+        })
+    }
+}
+
+function cadastrarSubClasse() {
+    let nome = $("#nome")[0].value;
+    if (nome === ""){
+        alert("Informe o nome.");
+    }else{
+        $.post("DAO/cadSubclasse.php", {nome:nome}, function (data) {
+            if (data !== ""){
+                alert("Erro inesperado, revise o campo ou recarregue a página.");
+            } else{
+                alert("Subclasse cadastrada com sucesso");
+                window.location.href = "/#!/listSubclasse";
+                reload();
+            }
+        })
+    }
+}
+
+function cadastrarFornecedor() {
+    let nome = $("#nome")[0].value;
+    let razao = $("#razao")[0].value;
+    let cnpj = $("#cnpj")[0].value;
+    let tel = $("#tel")[0].value;
+    let email = $("#email")[0].value;
+
+    if (nome === ""){
+        alert("Informe o nome.");
+    }else{
+        $.post("DAO/cadFornecedor.php", {nome:nome, razao:razao, cnpj:cnpj, tel:tel, email:email}, function (data) {
+            if (data !== ""){
+                alert("Erro inesperado, revise os campos ou recarregue a página.");
+            } else{
+                alert("Fornecedor cadastrado com sucesso");
+                window.location.href = "/#!/listFornecedor";
+                reload();
+            }
+        })
+    }
+}
 
 function isJson(str) {
     try {

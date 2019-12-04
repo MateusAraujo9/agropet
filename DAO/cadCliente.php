@@ -3,7 +3,7 @@ require "conection.php";
 
 $nome = isset($_POST['nome'])?$_POST['nome']:"";
 $cpf = isset($_POST['cpf'])?$_POST['cpf']:"";
-$time = isset($_POST['dtNasc'])?strtotime($_POST['dtNasc']):"";
+$time = isset($_POST['dtNasc'])?strtotime($_POST['dtNasc']):"2000-01-01";
 $estado = isset($_POST['estado'])?$_POST['estado']:"";
 $cidade = isset($_POST['cidade'])?$_POST['cidade']:"";
 $bairro = isset($_POST['bairro'])?$_POST['bairro']:"";
@@ -14,15 +14,13 @@ $tel = isset($_POST['tel'])?$_POST['tel']:"";
 $email = isset($_POST['email'])?$_POST['email']:"";
 
 
+
 if($time){
     $dtNasc = date('Y.m.d',$time);
 }
 
-if (empty($nome) || empty($cpf)){
-    echo "<script>";
-    echo "alert('Não foi informado nome ou cpf. Cliente Não cadastrado');";
-    echo "window.location.href = \"/#!/listCliente\"";
-    echo "</script>";
+if (empty($nome)){
+    echo "erro nome";
 }else{
     //echo "<br>$nome<br>$cpf<br>$time<br>$estado<br>$cidade<br>$bairro<br>$rua<br>$numero<br>$tel<br>$email";
 
@@ -31,7 +29,8 @@ if (empty($nome) || empty($cpf)){
     try{
         $sql = $pdo->query($sql);
 
-        header("Location: /#!/listCliente");
+        //redirecionamento será feito pelo javascript
+        //header("Location: /#!/listCliente");
     }catch (PDOException $e){
         echo "Erro: ".$e->getMessage();
     }
