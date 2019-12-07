@@ -4,6 +4,7 @@ var produtoC = {};
 var listaPCaixa =[];
 var subtotalCaixa = 0;
 var statusCaixa = false;
+var controleCaixa = 0;
 
 function subMenu(sub) {
     let subMenu = document.getElementById(sub);

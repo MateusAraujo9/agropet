@@ -41,7 +41,7 @@ try{
     <script src="resourse/js/angular-route.js"></script>
 
     <!--    Jquery autocomplete -->
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 
     <!--Meus links-->
     <link rel="stylesheet" href="resourse/css/style.css">
@@ -115,16 +115,19 @@ try{
         });
 
         function acaoProduto(){
-            let caixa;
-            $.when(consultaCaixaAberto()).done(caixa = statusCaixa);
-            if (caixa){
-                let pesquisa = $('#produto')[0].value;
-                if (pesquisa !== ""){
-                    pesquisaProdutoCaixa(pesquisa);
-                }
-            } else{
-                alert("Caixa Fechado");
-                console.log(caixa);
+            if (controleCaixa === 1){
+                $.get("DAO/consultaCaixaAberto.php", "x=1", function (data) {
+                    if (data === true){
+                        let pesquisa = $('#produto')[0].value;
+                        if (pesquisa !== ""){
+                            pesquisaProdutoCaixa(pesquisa);
+                        }
+                    }else{
+                        alert("Caixa Fechado");
+                        $('#produto')[0].value = "";
+                        controleCaixa = 0;
+                    }
+                })
             }
         }
 
@@ -137,7 +140,11 @@ try{
         $(document).keypress(function(e) {
             if (e.which === 13) {
                 if (e.target.getAttribute("id") === "produto") {
-                    acaoProduto();
+                    let pesquisa = $('#produto')[0].value;
+                    if(pesquisa !== ""){
+                        controleCaixa = 1;
+                        acaoProduto();
+                    }
                 }else if(e.target.getAttribute("id") === "quantidade" || e.target.getAttribute("id") === "vlUnit"){
                     let quant = $('#quantidade')[0].value.replace(",", ".");
                     if (quant !== "" && quant != null && quant > 0){
@@ -242,7 +249,7 @@ try{
 
     </div>
 </div>
-<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 </body>
 </html>
 
