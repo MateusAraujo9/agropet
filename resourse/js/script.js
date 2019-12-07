@@ -621,7 +621,7 @@ function calcularValor(elemento){
         p.focus();
     } else{
         let quant = parseFloat(elemento.value.replace(",", "."));
-        console.log(quant);
+        //console.log(quant);
         let novoValor = quant* produtoC.vlBruto;
        if (isNaN(novoValor)){
            $('#vlUnit')[0].value = "";
@@ -927,5 +927,5 @@ $('.cpf').mask('000.000.000-00');
 $('.numero').mask('0000000');
 $('.cep').mask('00000-000');
 $('.cnpj').mask('00.000.000/0000-00');
-$('.numeroCaixa').mask('##0,000', {reverse: true});
+$('.numeroCaixa').mask('##0,00', {reverse: true});
 

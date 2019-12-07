@@ -775,6 +775,12 @@ class ModalFinalizaVenda extends React.Component{
         }else{
             document.getElementById("vencimento").disabled = true;
         }
+
+        if (document.getElementById("dinheiro").checked === true){
+            document.getElementById("vlPago").disabled = false;
+        } else{
+            document.getElementById("vlPago").disabled = true;
+        }
     }
 
     render(){

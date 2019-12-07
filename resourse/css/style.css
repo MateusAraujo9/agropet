@@ -230,3 +230,13 @@
 .space{
     margin-top: 50px;
 }
+
+@media only screen and (max-width: 1199px){
+    .valoresCaixa{
+        width: 425px;
+    }
+
+    .componentR{
+        width: 500px;
+    }
+}

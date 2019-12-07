@@ -40,6 +40,9 @@ try{
     <script src="resourse/js/angular.js"></script>
     <script src="resourse/js/angular-route.js"></script>
 
+    <!--    Jquery autocomplete -->
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+
     <!--Meus links-->
     <link rel="stylesheet" href="resourse/css/style.css">
     <script src="resourse/js/script.js"></script>
@@ -116,12 +119,20 @@ try{
             $.when(consultaCaixaAberto()).done(caixa = statusCaixa);
             if (caixa){
                 let pesquisa = $('#produto')[0].value;
-                pesquisaProdutoCaixa(pesquisa);
+                if (pesquisa !== ""){
+                    pesquisaProdutoCaixa(pesquisa);
+                }
             } else{
                 alert("Caixa Fechado");
                 console.log(caixa);
             }
         }
+
+        $(function(){
+            $("#produto").autocomplete({
+                source: 'DAO/buscador.php'
+            });
+        });
 
         $(document).keypress(function(e) {
             if (e.which === 13) {
@@ -231,6 +242,7 @@ try{
 
     </div>
 </div>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 </body>
 </html>
 
