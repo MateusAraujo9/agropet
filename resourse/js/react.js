@@ -1,3 +1,4 @@
+var intervaloAlerta;
 class Alert extends React.Component{
     constructor(props){
         super(props);
@@ -48,7 +49,19 @@ function exibirAlerta(quant, tipo) {
                 document.getElementById("compReact")
             )
         }
+
+        intervaloAlerta = setInterval(function(){fecharAlerta(tipo)}, 3000);
     }
+}
+
+function fecharAlerta(tipo) {
+    if (tipo === "Cliente"){
+        fecharPesquisaReact();
+    }else{
+        fecharCompReact();
+    }
+
+    clearInterval(intervaloAlerta);
 }
 
 function fecharCompReact() {

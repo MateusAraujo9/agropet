@@ -117,12 +117,13 @@ try{
         function acaoProduto(){
             if (controleCaixa === 1){
                 $.get("DAO/consultaCaixaAberto.php", "x=1", function (data) {
-                    if (data === true){
+                    if (data === "true"){
                         let pesquisa = $('#produto')[0].value;
                         if (pesquisa !== ""){
                             pesquisaProdutoCaixa(pesquisa);
                         }
                     }else{
+                        console.log(data);
                         alert("Caixa Fechado");
                         $('#produto')[0].value = "";
                         controleCaixa = 0;
