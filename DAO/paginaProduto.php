@@ -14,6 +14,7 @@ $sql = "SELECT
         P.valor_venda as vlVenda      
         FROM produto P, fornecedor F
         WHERE P.id_fornecedor = F.id
+        AND P.data_exclusao is null
         ORDER BY P.nome
         LIMIT ".$nrItem.", 10";
 

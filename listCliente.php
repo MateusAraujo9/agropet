@@ -41,7 +41,9 @@ $pag = $result['valor'];
 $primeiroItem = ($pag-1)*10;
 $teste = 0;
 
-$sql = "SELECT * FROM cliente ORDER BY nome LIMIT ".$primeiroItem. ", 10";
+$sql = "SELECT * FROM cliente 
+        WHERE data_exclusao is null
+        ORDER BY nome LIMIT ".$primeiroItem. ", 10";
 
 //Try para pegar clientes da página
 try{
@@ -102,7 +104,8 @@ if ($sqlQuantCli['qtd'] > 0){
         echo "    <td>".$cl['telefone']."</td>";
         echo "    <td>".$cl['email']."</td>";
         echo "    <td>";
-        echo "      <img src=\"resourse/imagens/editar.png\" alt=\"editarUsuario\" title=\"Editar\" class=\"btnListUser\" onclick=\"window.location='editarCliente.php?cliente=".$cl['id']."'\">";
+        echo "      <img src=\"resourse/imagens/editar.png\" alt=\"editarCliente\" title=\"Editar\" class=\"btnListUser\" onclick=\"window.location='editarCliente.php?cliente=".$cl['id']."'\">";
+        echo "      <img src=\"resourse/imagens/excluir.png\" alt=\"excluirCliente\" title=\"Excluir\" class=\"btnListUser\" onclick=\"inativacaoDeCadastro(".$cl['id'].", 'cliente')\">";
         echo "    </td>";
         echo "</tr>";
     }

@@ -220,7 +220,10 @@ class LinhaProduto extends React.Component{
               <td>{this.props.nomeF}</td>
               <td>R${this.props.vlComp}</td>
               <td>R${this.props.vlVend}</td>
-              <td><img src="/resourse/imagens/editar.png" alt="editarProduto" title="Editar" className="btnListUser" onClick={()=>{window.location='editarProduto.php?produto='+this.props.id}}/></td>
+              <td>
+                  <img src="/resourse/imagens/editar.png" alt="editarProduto" title="Editar" className="btnListUser" onClick={()=>{window.location='editarProduto.php?produto='+this.props.id}}/>
+                  <img src="/resourse/imagens/excluir.png" alt="excluirProduto" title="Excluir" className="btnListUser" onClick={()=>{inativacaoDeCadastro(this.props.id, 'produto')}}/>
+              </td>
           </tr>
         );
     }

@@ -907,6 +907,19 @@ function cadastrarFornecedor() {
     }
 }
 
+function inativacaoDeCadastro(id, tipo) {
+    if (id !== "" && tipo !== ""){
+        $.post("DAO/inativacaoDeCadastro.php", {tipo:tipo, id:id}, function (data) {
+            if (data === "sucesso"){
+                alert(tipo+" inativado com sucesso");
+                reload();
+            }else{
+                alert("Erro inesperado, atualize a página e tente novamente");
+            }
+        })
+    }
+}
+
 function isJson(str) {
     try {
         JSON.parse(str);

@@ -10,6 +10,7 @@ $sql = "SELECT
         P.valor_venda as vlVenda      
         FROM produto P, fornecedor F
         WHERE P.id_fornecedor = F.id
+        AND P.data_exclusao is null
         ORDER BY P.nome
         LIMIT 10";
 
@@ -76,7 +77,10 @@ if ($quantidadePaginas > intval($quantidadePaginas)){
             echo "    <td>".$p['nome_fornecedor']."</td>";
             echo "    <td>R$ ".$p['vlCompra']."</td>";
             echo "    <td>R$ ".$p['vlVenda']."</td>";
-            echo "    <td><img src=\"resourse/imagens/editar.png\" alt=\"editarProduto\" title=\"Editar\" class=\"btnListUser\" onclick=\"window.location='editarProduto.php?produto=".$p['id_produto']."'\"></td>";
+            echo "    <td>
+                        <img src=\"resourse/imagens/editar.png\" alt=\"editarProduto\" title=\"Editar\" class=\"btnListUser\" onclick=\"window.location='editarProduto.php?produto=".$p['id_produto']."'\">
+                        <img src=\"resourse/imagens/excluir.png\" alt=\"excluirProduto\" title=\"Excluir\" class=\"btnListUser\" onclick=\"inativacaoDeCadastro(".$p['id_produto'].", 'produto')\">
+                      </td>";
             echo "</tr>";
         }
     }

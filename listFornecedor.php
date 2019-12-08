@@ -1,7 +1,9 @@
 <?php
 require "DAO/conection.php";
 
-$sql = "SELECT * FROM fornecedor";
+$sql = "SELECT * FROM fornecedor 
+        WHERE data_exclusao is null
+        ORDER BY nome";
 $sql = $pdo->query($sql);
 
 $fornecedores = $sql->fetchAll();
@@ -16,6 +18,7 @@ $fornecedores = $sql->fetchAll();
         <th scope="col">Cnpj</th>
         <th scope="col">Telefone</th>
         <th scope="col">Email</th>
+        <th scope="col">Opções</th>
     </tr>
     </thead>
     <tbody>
@@ -29,6 +32,9 @@ $fornecedores = $sql->fetchAll();
             echo "<td>".$forn['cnpj']."</td>";
             echo "<td>".$forn['telefone']."</td>";
             echo "<td>".$forn['email']."</td>";
+            echo "<td>";
+            echo "      <img src=\"resourse/imagens/excluir.png\" alt=\"excluirCliente\" title=\"Excluir\" class=\"btnListUser\" onclick=\"inativacaoDeCadastro(".$forn['id'].", 'fornecedor')\">";
+            echo "</td>";
             echo "</tr>";
         }
     }

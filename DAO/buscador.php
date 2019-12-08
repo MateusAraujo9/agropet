@@ -3,7 +3,7 @@ require "conection.php";
 
 $texto = filter_input(INPUT_GET, 'term', FILTER_SANITIZE_STRING);
 
-$sql = "SELECT nome FROM produto WHERE nome like '".$texto."%' ORDER BY nome LIMIT 10";
+$sql = "SELECT nome FROM produto WHERE nome like '".$texto."%' AND data_exclusao is null ORDER BY nome LIMIT 10";
 $sql = $pdo->prepare($sql);
 $sql->execute();
 

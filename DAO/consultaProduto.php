@@ -22,7 +22,8 @@ if ($pesquisa == null || empty($pesquisa)){
             P.valor_venda as valor_venda
             FROM produto P, unidade U
             WHERE P.cod_barra = '$pesquisa'
-            AND P.id_unidade = U.id";
+            AND P.id_unidade = U.id
+            AND P.data_exclusao is null";
 }elseif (is_numeric($pesquisa) && (strlen($pesquisa)!=14 || strlen($pesquisa)!=13)){
     $sql = "SELECT 
             P.id as id,
@@ -40,7 +41,8 @@ if ($pesquisa == null || empty($pesquisa)){
             P.valor_venda as valor_venda
             FROM produto P, unidade U
             WHERE P.id = '$pesquisa'
-            AND P.id_unidade = U.id";
+            AND P.id_unidade = U.id
+            AND P.data_exclusao is null";
 }else{
     $sql = "SELECT 
             P.id as id,
@@ -58,7 +60,8 @@ if ($pesquisa == null || empty($pesquisa)){
             P.valor_venda as valor_venda
             FROM produto P, unidade U
             WHERE P.nome like '$pesquisa%'
-            AND P.id_unidade = U.id";
+            AND P.id_unidade = U.id
+            AND P.data_exclusao is null";
 }
 
 try{
