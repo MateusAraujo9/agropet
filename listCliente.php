@@ -48,17 +48,18 @@ $sql = "SELECT * FROM cliente
 //Try para pegar clientes da página
 try{
     $sql = $pdo->query($sql);
-
-    $clientes = $sql->fetchAll();
 }catch (PDOException $e){
     echo "Erro".$e->getMessage();
 }
 
+if ($sql->rowCount() > 0){
+    $clientes = $sql->fetchAll();
+}
+
 //Try para contar quantidade de páginas
-$sql2 = "select COUNT(*) as C from cliente";
+$sql2 = "select COUNT(*) as C from cliente WHERE data_exclusao is null";
 try{
     $sql2 = $pdo->query($sql2);
-
 }catch (PDOException $e){
     echo "Erro: ".$e->getMessage();
 }
