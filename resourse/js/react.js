@@ -1278,7 +1278,7 @@ class SelectRecebParcial extends React.Component {
 }
 
 //Ultimo item da lista é a paginação (pagina e ultima página), penultimo item é o cabeçalho da tabela
-function exibirRelatorioCrediario(titulo, lista, tipo, dtIni, dtFim, cliente) {
+function exibirRelatorioCrediario(titulo, lista, tipo, dtIni, dtFim, cliente, total) {
     let header = lista[lista.length-2];
     let pagination = lista[lista.length-1];
     lista.splice((lista.length-2), 2);
@@ -1292,6 +1292,7 @@ function exibirRelatorioCrediario(titulo, lista, tipo, dtIni, dtFim, cliente) {
             </div>
             <button className="btn btn-outline-primary btn-sm" onClick={()=>{window.reload()}}>Voltar</button>
             {(cliente !== '' && tipo === 'aPagar')? <TabelaCredAPgar lista={lista} header={header}/>: <TabelaGen lista={lista} header={header} titulo={titulo}/>}
+            <TableTotal total={total} titulo={titulo}/>
             <PaginacaoCrediario tipo={tipo} dtIni={dtIni} dtFim={dtFim} cliente={cliente} pagina={pagination['pagina']} ultPagina={pagination['qtdPaginas']}/>
         </div>
     );
@@ -1508,6 +1509,30 @@ class TBodyCrediario extends React.Component{
     }
 }
 
+class TBodyMovimentacao extends React.Component{
+    render(){
+        let count = 0;
+        let lista = "";
+        if (Array.isArray(this.props.listaMov)){
+            lista = this.props.listaMov.map((item)=>{
+                count++;
+                return(
+                    <tr key={count}>
+                        <td>{item['descricao']}</td>
+                        <td>{item['valor']}</td>
+                    </tr>
+                )
+            });
+        }
+
+        return(
+            <tbody>
+            {lista}
+            </tbody>
+        )
+    }
+}
+
 function exibirRelatorioCaixa(dados) {
     let elemento = (
         <div>
@@ -1532,6 +1557,27 @@ function exibirRelatorioCaixa(dados) {
                         <th>{dados[0].abertura_moeda}</th>
                     </tr>
                 </tbody>
+            </table>
+
+            <h3>Movimentações</h3>
+            <table className="table table-hover">
+                <thead>
+                    <tr className="table-success">
+                        <th>Depósitos - Descrição</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <TBodyMovimentacao listaMov={dados[7]} />
+            </table>
+
+            <table className="table table-hover">
+                <thead>
+                <tr className="table-danger">
+                    <th>Retiradas - Descrição</th>
+                    <th>Valor</th>
+                </tr>
+                </thead>
+                <TBodyMovimentacao listaMov={dados[8]} />
             </table>
 
             <h3>Total por Espécie</h3>
@@ -1574,7 +1620,7 @@ function exibirRelatorioCaixa(dados) {
                         <td>{dados[4].qtdCli}</td>
                     </tr>
                     <tr>
-                        <th>Valor do Caixa (vendido + abertura)</th>
+                        <th>Valor do Caixa (vendido + abertura + recebimento + deposito - retirada)</th>
                         <td>{dados[5].vl_total}</td>
                     </tr>
                     <tr>
@@ -1630,7 +1676,39 @@ class PaginacaoVendas extends React.Component{
     }
 }
 
-function exebirRelatorioVendas(titulo, lista, porItem, cliente, soCliente, dtIni, dtFim) {
+class TableTotal extends React.Component{
+    render(){
+        let elVenda = (
+            <tr className="table-sm table-primary">
+                <th className="text-right">Subtotal: </th>
+                <th>{this.props.total.subtotal}</th>
+            </tr>
+        );
+        return (
+            <table className="table table-primary">
+                <tbody>
+                {
+                    this.props.titulo === "Relatório de Vendas" ?
+                        <tr className="table-sm table-primary">
+                            <th className="text-right">Subtotal: </th>
+                            <th>{this.props.total.subtotal}</th>
+                        </tr>:""
+                }
+                {
+                    this.props.titulo === "Relatório de Crediário" ?
+                        <tr className="table-sm table-primary">
+                            <th className="text-right">Total a Pagar: {this.props.total.aPagar} |</th>
+                            <th className="text-left">Total Pago: {this.props.total.pago}</th>
+                        </tr>:""
+                }
+
+                </tbody>
+            </table>
+        )
+    }
+}
+
+function exebirRelatorioVendas(titulo, lista, porItem, cliente, soCliente, dtIni, dtFim, total) {
     let header = lista[lista.length-2];
     let pagination = lista[lista.length-1];
     lista.splice((lista.length-2), 2);
@@ -1640,6 +1718,7 @@ function exebirRelatorioVendas(titulo, lista, porItem, cliente, soCliente, dtIni
             <h3 className="titulo">{titulo}</h3>
             <button className="btn btn-outline-primary btn-sm" onClick={()=>{window.reload()}}>Voltar</button>
             <TabelaGen lista={lista} header={header} titulo={titulo} porItem={porItem}/>
+            <TableTotal total={total} titulo={titulo}/>
             <PaginacaoVendas porItem={porItem} cliente={cliente} soCliente={soCliente} dtIni={dtIni} dtFim={dtFim} pagina={pagination['pagina']} ultPagina={pagination['qtdPaginas']}/>
         </div>
     )
@@ -1648,6 +1727,42 @@ function exebirRelatorioVendas(titulo, lista, porItem, cliente, soCliente, dtIni
         elemento,
         document.getElementById("compReact")
     );
+}
+
+function movimentacaoCaixa(titulo, tipo) {
+    let elemento = (
+        <div>
+            <div className="modal mostrar" id="janelaFornecedor">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5>{titulo}</h5>
+                        </div>
+                        <div className="modal-body">
+                            <div className="form-group">
+                                <label htmlFor="descricao" className="col-form-label">Descrição:</label>
+                                <input type="text" className="form-control" id="descricao" maxLength="100"/>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="valor" className="col-form-label">Valor:</label>
+                                <input type="text" className="form-control valor" maxLength="12" id="valor"/>
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <button onClick={()=>inserirMovimentacao(tipo)} className="btn btn-success">Confirmar</button>
+                            <button onClick={()=>inserirMovimentacao('X')} className="btn btn-secondary">Sair</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="modal-backdrop"></div>
+        </div>
+    )
+
+    ReactDOM.render(
+        elemento,
+        document.getElementById("compReact")
+    )
 }
 
 function setProdutoAjuste(id) {

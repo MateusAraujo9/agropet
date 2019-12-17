@@ -374,8 +374,12 @@ function acoesCaixa(opcao){
            fechaCaixa();
            $('#selectCaixa')[0].value = "";
        }
-    }else if(opcao.value = 3){
+    }else if(opcao.value == 3){
         finalizarVenda("C");
+    }else if (opcao.value == 4){
+        movimentacaoCaixa("Retirada", "R");
+    }else if (opcao.value == 5){
+        movimentacaoCaixa("Depósito", "D");
     }
 }
 
@@ -567,11 +571,15 @@ function consultarVendas(pagina){
 function consultaVendasDao(dtIni, dtFim, soCliente, cliente, porItem, pagina) {
     $.get("DAO/consultaVendas.php", {dtIni:dtIni, dtFim:dtFim, soCliente:soCliente, cliente:cliente, porItem:porItem, pagina:pagina}, function (data) {
 
+        let subtotal = "";
         let retorno = "";
+
         if(isJson(data)){
             retorno = JSON.parse(data);
+            subtotal = retorno.pop();
             removerFiltro();
-            exebirRelatorioVendas("Relatório de Vendas", retorno, porItem, cliente, soCliente, dtIni, dtFim);
+
+            exebirRelatorioVendas("Relatório de Vendas", retorno, porItem, cliente, soCliente, dtIni, dtFim, subtotal);
         }else{
             alert("Não retornou nenhuma venda.");
         }
@@ -649,17 +657,19 @@ function consultarCrediario(pagina){
 }
 
 function consultaCrediarioDao(tipo, dtIni, dtFim, cliente, pagina){
+    let total = "";
     $.get("DAO/consultaCrediario.php", {tipo:tipo, dtIni:dtIni, dtFim:dtFim, cliente:cliente, pagina:pagina}, function (data) {
         if (data == "false") {
             alert("Nenhum crediário encontrador");
         }else{
             let retorno = JSON.parse(data);
+            total = retorno.pop();
             // //console.log(retorno[retorno.length - 2]);
             // for (let attr in retorno[retorno.length - 2]){
             //     console.log(attr+"\n");
             // }
             removerFiltro();
-            exibirRelatorioCrediario("Relatório de Crediário", retorno, tipo, dtIni, dtFim, cliente);
+            exibirRelatorioCrediario("Relatório de Crediário", retorno, tipo, dtIni, dtFim, cliente, total);
         }
     })
 }
@@ -920,6 +930,31 @@ function inativacaoDeCadastro(id, tipo) {
     }
 }
 
+function inserirMovimentacao(tipo) {
+    let valor = $('#valor')[0].value;
+    let descricao = $('#descricao')[0].value;
+
+    if (tipo === "X"){
+        fecharCompReact();
+        $('#selectCaixa')[0].value = 0;
+    }
+
+    if ((valor === "" || descricao === "") && tipo !== "X"){
+        alert("Informe os campos obrigatórios");
+    } else if (tipo !== "X") {
+        $.post("DAO/movimentacaoCaixa.php", {tipo:tipo, valor:valor, descr:descricao}, function (data) {
+            if (data > 0){
+                alert("Transação realizada com sucesso!");
+                fecharCompReact();
+            } else{
+                alert("Erro inesperado, atualize a página e tente novamente.");
+            }
+
+            $('#selectCaixa')[0].value = 0;
+        })
+    }
+}
+
 function isJson(str) {
     try {
         JSON.parse(str);
@@ -942,4 +977,3 @@ $('.numero').mask('0000000');
 $('.cep').mask('00000-000');
 $('.cnpj').mask('00.000.000/0000-00');
 $('.numeroCaixa').mask('##0,00', {reverse: true});
-

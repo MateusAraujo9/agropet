@@ -205,6 +205,8 @@ try{
                     <option value="1">Abrir Caixa</option>
                     <option value="2">Fechar Caixa</option>
                     <option value="3">Cancelar Venda</option>
+                    <option value="4">Retirada</option>
+                    <option value="5">Depósito</option>
                 </select>
             </div>
         </div>

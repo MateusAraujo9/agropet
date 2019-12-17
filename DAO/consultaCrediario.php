@@ -36,6 +36,13 @@ if ($cliente == ""){
                 ORDER BY C.id_cliente, C.data_inclusao
                 LIMIT $itemInicial, 10";
 
+        $sqlSubTotal = "SELECT
+                        CONCAT('R$ ',REPLACE(CAST(SUM(C.valor_a_pagar) as decimal(15,2)), '.', ',')) AS aPagar,
+                        CONCAT('R$ ',REPLACE(CAST(SUM(C.valor_pago) as decimal(15,2)), '.', ',')) AS pago
+                        FROM crediario C, cliente L
+                        WHERE C.id_cliente = L.id
+                        AND C.data_inclusao between '$dtIni' AND '$dtFim'";
+
         $header['id'] = "Codigo";
         $header['nome'] = "Nome";
         $header['valor_a_pagar'] = "Valor a Pagar";
@@ -77,9 +84,17 @@ if ($cliente == ""){
                 FROM crediario C, cliente L
                 WHERE C.id_cliente = L.id
                 AND C.data_inclusao between '$dtIni' AND '$dtFim'
-                AND C.valor_pago is not null;
+                AND C.valor_pago is not null
                 ORDER BY C.id_cliente, C.data_inclusao
                 LIMIT $itemInicial, 10";
+
+        $sqlSubTotal = "SELECT
+                        CONCAT('R$ ',REPLACE(CAST(SUM(C.valor_a_pagar) as decimal(15,2)), '.', ',')) AS aPagar,
+                        CONCAT('R$ ',REPLACE(CAST(SUM(C.valor_pago) as decimal(15,2)), '.', ',')) AS pago
+                        FROM crediario C, cliente L
+                        WHERE C.id_cliente = L.id
+                        AND C.data_inclusao between '$dtIni' AND '$dtFim'
+                        AND C.valor_pago is not NULL";
 
         $header['id'] = "Codigo";
         $header['nome'] = "Nome";
@@ -125,6 +140,14 @@ if ($cliente == ""){
                 ORDER BY C.id_cliente, C.data_inclusao
                 LIMIT $itemInicial, 10";
 
+        $sqlSubTotal = "SELECT
+                        CONCAT('R$ ',REPLACE(CAST(SUM(C.valor_a_pagar) as decimal(15,2)), '.', ',')) AS aPagar,
+                        '0' AS pago
+                        FROM crediario C, cliente L
+                        WHERE C.id_cliente = L.id
+                        AND C.data_inclusao between '$dtIni' AND '$dtFim'
+                        AND C.valor_pago is NULL";
+
         $header['id'] = "Codigo";
         $header['nome'] = "Nome";
         $header['valor_a_pagar'] = "Valor a Pagar";
@@ -169,6 +192,14 @@ if ($cliente == ""){
                 AND C.id_cliente = ".$idCli['id']."
                 ORDER BY C.id_cliente, C.data_inclusao
                 LIMIT $itemInicial, 10";
+
+        $sqlSubTotal = "SELECT
+                        CONCAT('R$ ',REPLACE(CAST(SUM(C.valor_a_pagar) as decimal(15,2)), '.', ',')) AS aPagar,
+                        CONCAT('R$ ',REPLACE(CAST(SUM(C.valor_pago) as decimal(15,2)), '.', ',')) AS pago
+                        FROM crediario C, cliente L
+                        WHERE C.id_cliente = L.id
+                        AND C.data_inclusao between '$dtIni' AND '$dtFim'
+                        AND C.id_cliente = ".$idCli['id'];
 
         $header['id'] = "Codigo";
         $header['nome'] = "Nome";
@@ -216,6 +247,15 @@ if ($cliente == ""){
                 ORDER BY C.id_cliente, C.data_inclusao
                 LIMIT $itemInicial, 10";
 
+        $sqlSubTotal = "SELECT
+                        CONCAT('R$ ',REPLACE(CAST(SUM(C.valor_a_pagar) as decimal(15,2)), '.', ',')) AS aPagar,
+                        CONCAT('R$ ',REPLACE(CAST(SUM(C.valor_pago) as decimal(15,2)), '.', ',')) AS pago
+                        FROM crediario C, cliente L
+                        WHERE C.id_cliente = L.id
+                        AND C.data_inclusao between '$dtIni' AND '$dtFim'
+                        AND C.id_cliente = ".$idCli['id']."
+                        AND C.data_pagamento is not null";
+
         $header['id'] = "Codigo";
         $header['nome'] = "Nome";
         $header['valor_a_pagar'] = "Valor a Pagar";
@@ -262,6 +302,15 @@ if ($cliente == ""){
                 ORDER BY C.id_cliente, C.data_inclusao
                 LIMIT $itemInicial, 10";
 
+        $sqlSubTotal = "SELECT
+                        CONCAT('R$ ',REPLACE(CAST(SUM(C.valor_a_pagar) as decimal(15,2)), '.', ',')) AS aPagar,
+                        '0' AS pago
+                        FROM crediario C, cliente L
+                        WHERE C.id_cliente = L.id
+                        AND C.data_inclusao between '$dtIni' AND '$dtFim'
+                        AND C.id_cliente = ".$idCli['id']."
+                        AND C.data_pagamento is null";
+
         $header['nome'] = "Nome";
         $header['valor_a_pagar'] = "Valor a Pagar";
         $header['data_inclusao'] = "Dt Venda";
@@ -295,14 +344,17 @@ if ($cliente == ""){
 //proximos comandos para retornornar dados para o relatorio
 try{
     $sql = $pdo->query($sql);
+    $ret1 = $pdo->query($sqlSubTotal);
 }catch (PDOException $e){
   echo "Erro: ".$e->getMessage();
 }
 
 if ($sql->rowCount() > 0) {
     $return = $sql->fetchAll();
+    $ret1 = $ret1->fetch();
     $return[count($return)] = $header;
     $return[count($return)] = $pagination;
+    $return[count($return)] = $ret1;
     print_r(json_encode($return));
 }else{
     echo "false";
